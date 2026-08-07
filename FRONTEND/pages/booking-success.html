@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmed | DriveZone</title>
+
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+
+<body>
+
+<header>
+    <div class="logo">
+        <h2> DriveZone</h2>
+    </div>
+
+    <nav>
+        <a href="../index.html">Home</a>
+        <a href="vehicles.html">Vehicles</a>
+        <a href="my-bookings.html">My Bookings</a>
+    </nav>
+</header>
+
+<section class="success-section">
+
+    <div class="success-card">
+
+        <i class="fa-solid fa-circle-check success-big-icon"></i>
+
+        <h1>Booking Confirmed 🎉</h1>
+
+        <p>Your vehicle has been booked successfully.</p>
+
+        <div class="booking-details">
+
+            <p><strong>Booking ID :</strong>
+                <span id="bookingId">Loading...</span>
+            </p>
+
+            <p><strong>Vehicle :</strong>
+                <span id="vehicleName">Loading...</span>
+            </p>
+
+            <p><strong>Pickup Date :</strong>
+                <span id="pickupDate">Loading...</span>
+            </p>
+
+            <p><strong>Return Date :</strong>
+                <span id="returnDate">Loading...</span>
+            </p>
+
+            <p><strong>Pickup Location :</strong>
+                <span id="pickupLocation">Loading...</span>
+            </p>
+
+            <p><strong>Total Paid :</strong>
+                <span id="totalPaid">Loading...</span>
+            </p>
+
+        </div>
+
+        <div class="success-buttons">
+
+            <a id="pickupBtn" href="#" class="btn">
+                View Pickup Details
+            </a>
+
+            <a href="my-bookings.html" class="btn2">
+                My Bookings
+            </a>
+
+            <a href="../index.html" class="btn2">
+                Back to Home
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+<script>
+
+const API = "http://127.0.0.1:8000/api";
+
+const params = new URLSearchParams(window.location.search);
+
+const vehicleId = params.get("id");
+const pickup = params.get("pickup");
+const ret = params.get("return");
+
+async function loadSuccess(){
+
+    const res = await fetch(`${API}/vehicles/${vehicleId}`);
+    const vehicle = await res.json();
+
+    const bookingId = "SVR" + Math.floor(100000 + Math.random() * 900000);
+
+    const vehicleName = vehicle.brand + " " + vehicle.model;
+
+    document.getElementById("bookingId").textContent = bookingId;
+    document.getElementById("vehicleName").textContent = vehicleName;
+    document.getElementById("pickupDate").textContent = pickup;
+    document.getElementById("returnDate").textContent = ret;
+    document.getElementById("pickupLocation").textContent = vehicle.location;
+
+    const d1 = new Date(pickup);
+    const d2 = new Date(ret);
+
+    const days = Math.max(1, Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24)));
+
+    const rent = days * vehicle.price_per_day;
+    const deposit = vehicle.security_deposit;
+    const gst = Math.round(rent * 0.18);
+    const total = rent + deposit + gst;
+
+    document.getElementById("totalPaid").textContent =
+        "₹" + total.toLocaleString();
+
+    document.getElementById("pickupBtn").href =
+        `pickup.html?id=${vehicle.id}&vehicle=${encodeURIComponent(vehicleName)}&bookingId=${encodeURIComponent(bookingId)}&pickup=${encodeURIComponent(pickup)}&return=${encodeURIComponent(ret)}&location=${encodeURIComponent(vehicle.location)}&rent=${rent}&deposit=${deposit}&gst=${gst}&total=${total}`;
+
+}
+
+loadSuccess();
+
+</script>
+
+<script src="../assets/js/script.js"></script>
+
+</body>
+</html>

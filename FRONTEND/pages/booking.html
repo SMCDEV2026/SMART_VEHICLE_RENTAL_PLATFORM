@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Book Vehicle | DriveZone</title>
+
+    <link rel="stylesheet" href="../assets/css/style.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+<script>
+const API = "http://127.0.0.1:8000/api";
+
+const params = new URLSearchParams(window.location.search);
+const vehicleId = params.get("id");
+
+async function loadVehicle() {
+
+    if (!vehicleId) return;
+
+    const res = await fetch(`${API}/vehicles/${vehicleId}`);
+    const vehicle = await res.json();
+
+    document.getElementById("price").innerHTML =
+        `₹${vehicle.price_per_day.toLocaleString()} / Day`;
+
+    document.getElementById("deposit").innerHTML =
+        `₹${vehicle.security_deposit.toLocaleString()}`;    
+}
+
+loadVehicle();
+</script>
+<body>
+
+<header>
+
+    <div class="logo">
+        <h2> DriveZone</h2>
+    </div>
+
+    <nav>
+
+        <a href="../index.html">Home</a>
+        <a href="vehicles.html">Vehicles</a>
+        <a href="my-bookings.html">My Bookings</a>
+
+    </nav>
+
+</header>
+
+<section class="booking-section">
+
+<div class="booking-container">
+
+<h1>Book Your Vehicle</h1>
+
+<p>
+Fill the details below to continue booking.
+</p>
+
+<form id="bookingForm">
+
+<div class="booking-grid">
+
+<div class="input-box">
+
+<label>Pickup Date</label>
+
+<input type="date" id="pickupDate" required>
+
+</div>
+
+<div class="input-box">
+
+<label>Return Date</label>
+
+<input type="date" id="returnDate" required>
+
+</div>
+
+<div class="input-box">
+
+<label>Pickup Time</label>
+
+<input type="time" required>
+
+</div>
+
+<div class="input-box">
+
+<label>Return Time</label>
+
+<input type="time" required>
+
+</div>
+
+<div class="input-box">
+
+<label>Pickup Location</label>
+
+<select required>
+
+<option>Mumbai Airport</option>
+
+<option>Thane</option>
+
+<option>Navi Mumbai</option>
+
+<option>Pune</option>
+
+</select>
+
+</div>
+
+<div class="input-box">
+
+<label>Return Location</label>
+
+<select required>
+
+<option>Mumbai Airport</option>
+
+<option>Thane</option>
+
+<option>Navi Mumbai</option>
+
+<option>Pune</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div class="booking-summary">
+
+<h2>Estimated Price</h2>
+
+<h3 id="price">Loading...</h3>
+
+<p>
+Security Deposit :
+<b id="deposit">Loading...</b>
+</p>
+
+<p>GST Included</p>
+
+</div>
+
+<button class="btn">
+
+Check Availability
+
+</button>
+
+</form>
+
+</div>
+
+</section>
+<script>
+
+document.getElementById("bookingForm").addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    const pickup =
+        document.getElementById("pickupDate").value;
+
+    const ret =
+        document.getElementById("returnDate").value;
+
+    window.location.href =
+    `availability.html?id=${vehicleId}&pickup=${pickup}&return=${ret}`;
+
+});
+
+</script>
+<script src="../assets/js/script.js"></script>
+
+</body>
+
+</html>

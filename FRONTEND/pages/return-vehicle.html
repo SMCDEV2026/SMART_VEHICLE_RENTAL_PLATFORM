@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Return Vehicle | DriveZone</title>
+
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+<h2> DriveZone</h2>
+</div>
+
+<nav>
+<a href="../index.html">Home</a>
+<a href="vehicles.html">Vehicles</a>
+<a href="my-bookings.html">My Bookings</a>
+</nav>
+
+</header>
+
+<section class="return-section">
+
+<div class="return-card">
+
+<i class="fa-solid fa-car-side return-icon"></i>
+
+<h1>Return Vehicle</h1>
+
+<p>Please verify the vehicle details before completing the return.</p>
+
+<div class="return-grid">
+
+<div>
+<h3>Vehicle</h3>
+<p id="vehicleName">Loading...</p>
+</div>
+
+<div>
+<h3>Booking ID</h3>
+<p id="bookingId">Loading...</p>
+</div>
+
+<div>
+<h3>Return Date</h3>
+<input type="date">
+</div>
+
+<div>
+<h3>Return Time</h3>
+<input type="time">
+</div>
+
+<div>
+<h3>Fuel Level</h3>
+<select>
+<option>Full Tank</option>
+<option>75%</option>
+<option>50%</option>
+<option>25%</option>
+</select>
+</div>
+
+<div>
+<h3>Vehicle Condition</h3>
+<select>
+<option>Excellent</option>
+<option>Good</option>
+<option>Minor Damage</option>
+<option>Major Damage</option>
+</select>
+</div>
+
+</div>
+
+<div class="damage-box">
+
+<h3>Damage Notes</h3>
+
+<textarea placeholder="Write damage details (if any)..."></textarea>
+
+</div>
+
+<div class="image-box">
+
+<h3>Vehicle Inspection Photo</h3>
+
+<div class="upload-placeholder">
+📷 Upload Vehicle Image
+</div>
+
+</div>
+
+<a id="billBtn" href="#" class="btn">
+Generate Final Bill
+</a>
+
+</div>
+
+</section>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+
+const vehicle = params.get("vehicle");
+const bookingId = params.get("bookingId");
+const pickup = params.get("pickup");
+
+const rent = params.get("rent");
+const deposit = params.get("deposit");
+const gst = params.get("gst");
+const total = params.get("total");
+
+document.getElementById("vehicleName").textContent =
+vehicle || "Vehicle";
+
+document.getElementById("bookingId").textContent =
+bookingId || "-";
+
+document.getElementById("billBtn").href =
+`final-bill.html?vehicle=${encodeURIComponent(vehicle)}&bookingId=${encodeURIComponent(bookingId)}&pickup=${encodeURIComponent(pickup)}&rent=${encodeURIComponent(rent)}&deposit=${encodeURIComponent(deposit)}&gst=${encodeURIComponent(gst)}&total=${encodeURIComponent(total)}`;
+</script>
+
+<script src="../assets/js/script.js"></script>
+
+</body>
+</html>

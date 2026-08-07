@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pickup Details | DriveZone</title>
+
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+</head>
+
+<body>
+
+<header>
+    <div class="logo">
+        <h2> DriveZone</h2>
+    </div>
+
+    <nav>
+        <a href="../index.html">Home</a>
+        <a href="vehicles.html">Vehicles</a>
+        <a href="my-bookings.html">My Bookings</a>
+    </nav>
+</header>
+
+<section class="pickup-section">
+
+    <div class="pickup-card">
+
+        <h1>Pickup Details</h1>
+        <p class="pickup-status">
+            Your vehicle is ready for pickup.
+        </p>
+
+        <div class="pickup-grid">
+
+            <div>
+                <h3>Vehicle</h3>
+                <p id="vehicleName">Loading...</p>
+            </div>
+
+            <div>
+                <h3>Booking ID</h3>
+                <p id="bookingId">Loading...</p>
+            </div>
+
+            <div>
+                <h3>Pickup Date</h3>
+                <p id="pickupDate">Loading...</p>
+            </div>
+
+            <div>
+                <h3>Pickup Time</h3>
+                <p>10:00 AM</p>
+            </div>
+
+            <div>
+                <h3>Pickup Location</h3>
+                <p id="pickupLocation">Mumbai</p>
+            </div>
+
+            <div>
+                <h3>Rental Executive</h3>
+                <p>Rahul Sharma</p>
+            </div>
+
+            <div>
+                <h3>Contact Number</h3>
+                <p>+91 98765 43210</p>
+            </div>
+
+            <div>
+                <h3>Required Documents</h3>
+                <p>Aadhaar + Driving License</p>
+            </div>
+
+        </div>
+
+        <div class="map-box">
+            <h3>Pickup Location Map</h3>
+        <div id="map" style="height:350px;border-radius:15px;">
+
+        
+        </div>
+
+        <a id="startRideBtn" href="#" class="btn">
+            Start Ride
+        </a>
+
+    </div>
+
+</section>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+
+document.getElementById("vehicleName").textContent =
+    params.get("vehicle") || "Vehicle";
+
+document.getElementById("bookingId").textContent =
+    params.get("bookingId") || "SVR000000";
+
+document.getElementById("pickupDate").textContent =
+    params.get("pickup") || "Not Selected";
+
+document.getElementById("pickupLocation").textContent =
+    params.get("location") || "Mumbai";
+
+document.getElementById("startRideBtn").href =
+`ride-progress.html?vehicle=${encodeURIComponent(params.get("vehicle"))}
+&bookingId=${encodeURIComponent(params.get("bookingId"))}
+&pickup=${encodeURIComponent(params.get("pickup"))}
+&location=${encodeURIComponent(params.get("location"))}
+&rent=${encodeURIComponent(params.get("rent"))}
+&deposit=${encodeURIComponent(params.get("deposit"))}
+&gst=${encodeURIComponent(params.get("gst"))}
+&total=${encodeURIComponent(params.get("total"))}`;
+</script>
+
+<script src="../assets/js/script.js"></script>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="../assets/js/map.js"></script>
+
+</body>
+</html>

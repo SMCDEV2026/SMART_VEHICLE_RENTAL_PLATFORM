@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Vehicle Details | DriveZone</title>
+
+    <link rel="stylesheet" href="../assets/css/style.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+<script>
+const params = new URLSearchParams(window.location.search);
+const vehicleId = params.get("id");
+
+fetch(`http://127.0.0.1:8000/api/vehicles/${vehicleId}`)
+.then(res => res.json())
+.then(vehicle => {
+
+document.getElementById("vehicleName").innerHTML =
+vehicle.brand + " " + vehicle.model;
+
+document.getElementById("vehiclePrice").innerHTML =
+"₹" + vehicle.price_per_day + " / Day";
+
+document.getElementById("fuelType").innerHTML =
+vehicle.fuel_type;
+
+document.getElementById("transmission").innerHTML =
+vehicle.transmission;
+
+document.getElementById("seats").innerHTML =
+vehicle.seats + " Seats";
+
+document.getElementById("location").innerHTML =
+vehicle.location;
+
+document.getElementById("vehicleImage").src =
+vehicle.image_url;
+
+document.getElementById("vehicleDescription").innerHTML =
+vehicle.brand + " " + vehicle.model +
+" is available for rent in excellent condition.";
+
+document.getElementById("bookBtn").href =
+"booking.html?id=" + vehicle.id;
+
+});
+</script>
+<body>
+
+<header>
+
+    <div class="logo">
+        <h2>DriveZone</h2>
+    </div>
+
+    <nav>
+
+        <a href="../index.html">Home</a>
+        <a href="vehicles.html">Vehicles</a>
+        <a href="my-bookings.html">My Bookings</a>
+        <a href="contact.html">Contact</a>
+
+    </nav>
+
+</header>
+
+<section class="vehicle-details">
+
+    <div class="vehicle-image">
+
+        <img id="vehicleImage" src="" alt="Vehicle">
+
+    </div>
+
+    <div class="vehicle-info">
+
+        <h1 id="vehicleName"></h1>
+
+        <div class="rating">
+
+            ⭐⭐⭐⭐⭐ (4.9/5)
+
+        </div>
+
+        <h2 id="vehiclePrice"></h2>
+
+        <p>
+
+           <p id="vehicleDescription"></p>
+
+        </p>
+
+        <div class="specifications">
+
+            <div class="spec">
+
+                <i class="fa-solid fa-gas-pump"></i>
+
+                <span id="fuelType"></span>
+
+            </div>
+
+            <div class="spec">
+
+                <i class="fa-solid fa-gears"></i>
+
+                <span id="transmission"></span>
+
+            </div>
+
+            <div class="spec">
+
+                <i class="fa-solid fa-users"></i>
+
+                <span id="seats"></span>
+
+            </div>
+
+            <div class="spec">
+
+                <i class="fa-solid fa-road"></i>
+
+                <span>Unlimited KM</span>
+
+            </div>
+
+        </div>
+
+        <h3>Pickup Location</h3>
+
+        <p id="location"></p>
+
+        <h3>Available</h3>
+
+        <p style="color:green;font-weight:bold;">
+            ✔ Available Today
+        </p>
+
+        <div class="detail-buttons">
+
+            <a id="bookBtn" href="#" class="btn">
+
+                Book Now
+
+            </a>
+
+            <a href="vehicles.html" class="btn2">
+
+                Back
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section class="features-section">
+
+    <h2>Vehicle Features</h2>
+
+    <div class="feature-grid">
+
+        <div>✔ Air Conditioner</div>
+
+        <div>✔ Bluetooth</div>
+
+        <div>✔ GPS Navigation</div>
+
+        <div>✔ Reverse Camera</div>
+
+        <div>✔ ABS</div>
+
+        <div>✔ Airbags</div>
+
+        <div>✔ USB Charging</div>
+
+        <div>✔ Music System</div>
+
+    </div>
+
+</section>
+
+<section class="reviews">
+
+    <h2>Customer Reviews</h2>
+
+    <div class="review-card">
+
+        <h3>Rahul Sharma ⭐⭐⭐⭐⭐</h3>
+
+        <p>
+
+            Excellent condition. Very smooth driving experience.
+
+        </p>
+
+    </div>
+
+    <div class="review-card">
+
+        <h3>Priya Patel ⭐⭐⭐⭐☆</h3>
+
+        <p>
+
+            Clean vehicle and quick pickup process.
+
+        </p>
+
+    </div>
+
+</section>
+
+<footer>
+
+    <p>
+
+        © 2026 DriveZone
+
+    </p>
+
+</footer>
+
+<script src="../assets/js/script.js"></script>
+
+</body>
+</html>

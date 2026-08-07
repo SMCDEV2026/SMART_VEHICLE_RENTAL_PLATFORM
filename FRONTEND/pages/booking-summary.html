@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Booking Summary | DriveZone</title>
+
+<link rel="stylesheet" href="../assets/css/style.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<!-- YAHAN SCRIPT PASTE KARO -->
+
+<script>
+
+const API = "http://127.0.0.1:8000/api";
+
+const params = new URLSearchParams(window.location.search);
+
+const vehicleId = params.get("id");
+const pickup = params.get("pickup");
+const ret = params.get("return");
+
+async function loadSummary(){
+
+    const res = await fetch(`${API}/vehicles/${vehicleId}`);
+    const vehicle = await res.json();
+
+    document.getElementById("vehicleName").innerHTML =
+        vehicle.brand + " " + vehicle.model;
+
+    document.getElementById("pickupDate").innerHTML = pickup;
+    document.getElementById("returnDate").innerHTML = ret;
+
+    const d1 = new Date(pickup);
+    const d2 = new Date(ret);
+
+    const days = Math.ceil((d2-d1)/(1000*60*60*24));
+
+    document.getElementById("totalDays").innerHTML = days;
+
+    const rent = days * vehicle.price_per_day;
+    const deposit = vehicle.security_deposit;
+    const gst = rent * 0.18;
+    const discount = 0;
+
+    const total = rent + deposit + gst - discount;
+
+    document.getElementById("rent").innerHTML =
+        "₹" + rent.toLocaleString();
+
+    document.getElementById("deposit").innerHTML =
+        "₹" + deposit.toLocaleString();
+
+    document.getElementById("gst").innerHTML =
+        "₹" + gst.toLocaleString();
+
+    document.getElementById("discount").innerHTML =
+        "- ₹" + discount.toLocaleString();
+
+    document.getElementById("total").innerHTML =
+        "₹" + total.toLocaleString();
+
+    document.getElementById("payBtn").href =
+        `payment.html?id=${vehicleId}&pickup=${pickup}&return=${ret}`;
+}
+
+loadSummary();
+
+
+
+</script>
+
+<body>
+
+<header>
+
+<div class="logo">
+<h2> DriveZone</h2>
+</div>
+
+<nav>
+
+<a href="../index.html">Home</a>
+<a href="vehicles.html">Vehicles</a>
+<a href="my-bookings.html">My Bookings</a>
+
+</nav>
+
+</header>
+
+<section class="summary-section">
+
+<div class="summary-card">
+
+<h1>Booking Summary</h1>
+
+<table class="summary-table">
+
+<tr>
+<td>Vehicle</td>
+<td><strong id="vehicleName">Loading...</strong></td>
+</tr>
+
+<tr>
+<td>Pickup Date</td>
+<td id="pickupDate">Loading...</td>
+</tr>
+
+<tr>
+<td>Return Date</td>
+<td id="returnDate">Loading...</td>
+</tr>
+
+<tr>
+<td>Total Days</td>
+<td id="totalDays">Loading...</td>
+</tr>
+
+<tr>
+<td>Rental Charges</td>
+<td id="rent">Loading...</td>
+</tr>
+
+<tr>
+<td>Security Deposit</td>
+<td id="deposit">Loading...</td>
+</tr>
+
+<tr>
+<td>GST (18%)</td>
+<td id="gst">Loading...</td>
+</tr>
+
+<tr>
+<td>Discount</td>
+<td id="discount" style="color:green;">₹0</td>
+</tr>
+
+<tr class="total-row">
+<td>Total Payable</td>
+<td id="total">Loading...</td>
+</tr>
+
+</table>
+
+<a id="payBtn" href="#" class="btn">
+    Proceed to Payment
+</a>
+
+</div>
+
+</section>
+
+<script src="../assets/js/script.js"></script>
+
+</body>
+
+</html>

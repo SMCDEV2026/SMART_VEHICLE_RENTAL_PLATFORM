@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Booking Completed | DriveZone</title>
+
+<link rel="stylesheet" href="../assets/css/style.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+<h2> DriveZone</h2>
+</div>
+
+<nav>
+
+<a href="../index.html">Home</a>
+<a href="vehicles.html">Vehicles</a>
+<a href="my-bookings.html">My Bookings</a>
+
+</nav>
+
+</header>
+
+<section class="completed-section">
+
+<div class="completed-card">
+
+<i class="fa-solid fa-circle-check completed-icon"></i>
+
+<h1>Booking Completed Successfully</h1>
+
+<p>
+Thank you for choosing DriveZone.
+We hope you had a wonderful journey.
+</p>
+
+<div class="completed-details">
+
+<div>
+<h3>Booking ID</h3>
+<p id="bookingId">Loading...</p>
+</div>
+
+<div>
+<h3>Vehicle</h3>
+<p id="vehicleName">Loading...</p>
+</div>
+
+<div>
+<h3>Total Paid</h3>
+<p id="totalPaid">Loading...</p>
+</div>
+
+<div>
+<h3>Status</h3>
+<p style="color:green;">Completed</p>
+</div>
+
+</div>
+
+<div class="completed-buttons">
+
+<a id="invoiceBtn" href="#" class="btn">
+Download Invoice
+</a>
+
+<a href="rating-review.html" class="btn2">
+Rate Your Ride
+</a>
+
+<a href="../index.html" class="btn2">
+Back To Home
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+
+const vehicle = params.get("vehicle") || "-";
+const bookingId = params.get("bookingId") || "-";
+const pickup = params.get("pickup") || "-";
+const ret = params.get("return") || "-";
+
+const rent = Number(params.get("rent")) || 0;
+const deposit = Number(params.get("deposit")) || 0;
+const gst = Number(params.get("gst")) || 0;
+const total = Number(params.get("total")) || 0;
+
+// Show Data
+document.getElementById("vehicleName").textContent = vehicle;
+document.getElementById("bookingId").textContent = bookingId;
+document.getElementById("totalPaid").textContent =
+"₹" + total.toLocaleString();
+
+// Invoice Button
+document.getElementById("invoiceBtn").href =
+`invoice.html?vehicle=${encodeURIComponent(vehicle)}
+&bookingId=${encodeURIComponent(bookingId)}
+&pickup=${encodeURIComponent(pickup)}
+&return=${encodeURIComponent(ret)}
+&rent=${rent}
+&deposit=${deposit}
+&gst=${gst}
+&total=${total}`.replace(/\s+/g,'');
+
+</script>
+
+<script src="../assets/js/script.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Payment Settlement | DriveZone</title>
+
+<link rel="stylesheet" href="../assets/css/style.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+<h2> DriveZone</h2>
+</div>
+
+<nav>
+
+<a href="../index.html">Home</a>
+<a href="vehicles.html">Vehicles</a>
+<a href="my-bookings.html">My Bookings</a>
+
+</nav>
+
+</header>
+
+<section class="settlement-section">
+
+<div class="settlement-card">
+
+<h1>Payment Settlement</h1>
+
+<p>Complete your pending payment or receive your refund.</p>
+
+<p><strong>Vehicle :</strong> <span id="vehicleName">Loading...</span></p>
+<p><strong>Booking ID :</strong> <span id="bookingId">Loading...</span></p>
+
+<div class="settlement-summary">
+
+<div>
+
+<h3>Pending Amount</h3>
+
+<h2 id="pendingAmount">₹0</h2>
+
+</div>
+
+<div>
+
+<h3>Refund Amount</h3>
+
+<h2 id="refundAmount" style="color:green;">₹0</h2>
+
+</div>
+
+</div>
+
+<form id="paymentForm">
+
+<h3>Select Payment Method</h3>
+
+<div class="payment-options">
+
+<label>
+<input type="radio" name="payment" checked>
+📱 UPI
+</label>
+
+<label>
+<input type="radio" name="payment">
+💳 Credit / Debit Card
+</label>
+
+<label>
+<input type="radio" name="payment">
+🏦 Net Banking
+</label>
+
+</div>
+
+<div class="input-box">
+
+<label>UPI ID / Card Number</label>
+
+<input
+type="text"
+placeholder="Enter Payment Details"
+required>
+
+</div>
+
+<button type="submit" class="btn">
+Complete Settlement
+</button>
+
+</form>
+
+</div>
+
+</section>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+
+const vehicle = params.get("vehicle");
+const bookingId = params.get("bookingId");
+const pickup = params.get("pickup");
+const ret = params.get("return");
+
+const rent = Number(params.get("rent")) || 0;
+const deposit = Number(params.get("deposit")) || 0;
+const gst = Number(params.get("gst")) || 0;
+const total = Number(params.get("total")) || 0;
+
+document.getElementById("vehicleName").textContent = vehicle || "-";
+document.getElementById("bookingId").textContent = bookingId || "-";
+
+document.getElementById("pendingAmount").textContent =
+"₹" + total.toLocaleString();
+
+document.getElementById("refundAmount").textContent = "₹0";
+
+document.getElementById("paymentForm").addEventListener("submit", function(e){
+
+e.preventDefault();
+
+window.location.href =
+`booking-completed.html?vehicle=${encodeURIComponent(vehicle)}
+&bookingId=${encodeURIComponent(bookingId)}
+&pickup=${encodeURIComponent(pickup)}
+&return=${encodeURIComponent(ret)}
+&rent=${rent}
+&deposit=${deposit}
+&gst=${gst}
+&total=${total}`.replace(/\s+/g,'');
+
+});
+
+</script>
+
+<script src="../assets/js/script.js"></script>
+
+</body>
+</html>

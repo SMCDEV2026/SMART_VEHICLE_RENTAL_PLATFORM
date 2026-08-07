@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Final Bill | DriveZone</title>
+
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+<h2> DriveZone</h2>
+</div>
+
+<nav>
+<a href="../index.html">Home</a>
+<a href="vehicles.html">Vehicles</a>
+<a href="my-bookings.html">My Bookings</a>
+</nav>
+
+</header>
+
+<section class="bill-section">
+
+<div class="bill-card">
+
+<h1>Final Bill</h1>
+
+<p>Review your rental charges before completing the booking.</p>
+
+<p><strong>Vehicle :</strong> <span id="vehicleName">Loading...</span></p>
+
+<p><strong>Booking ID :</strong> <span id="bookingId">Loading...</span></p>
+
+<table class="bill-table">
+
+<tr>
+<td>Rental Charges</td>
+<td id="rent">₹0</td>
+</tr>
+
+<tr>
+<td>Fuel Charges</td>
+<td id="fuel">₹0</td>
+</tr>
+
+<tr>
+<td>Extra Hours</td>
+<td id="extra">₹500</td>
+</tr>
+
+<tr>
+<td>Damage Charges</td>
+<td id="damage">₹0</td>
+</tr>
+
+<tr>
+<td>Security Deposit Refund</td>
+<td id="deposit" style="color:green;">₹0</td>
+</tr>
+
+<tr>
+<td>GST (18%)</td>
+<td id="gst">₹0</td>
+</tr>
+
+<tr class="grand-total">
+<td>Total Settlement</td>
+<td id="total">₹0</td>
+</tr>
+
+</table>
+
+<div class="bill-note">
+
+<i class="fa-solid fa-circle-info"></i>
+
+<span>
+Security deposit has been adjusted in the final settlement.
+</span>
+
+</div>
+
+<a id="settlementBtn" href="#" class="btn">
+Proceed to Settlement
+</a>
+
+</div>
+
+</section>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+
+const vehicle = params.get("vehicle") || "-";
+const bookingId = params.get("bookingId") || "-";
+const pickup = params.get("pickup") || "";
+const ret = params.get("return") || "";
+
+const rent = Number(params.get("rent")) || 0;
+const deposit = Number(params.get("deposit")) || 0;
+const gst = Number(params.get("gst")) || 0;
+
+const fuel = 0;
+const extra = 500;
+const damage = 0;
+
+const total = rent + fuel + extra + damage + gst - deposit;
+
+// Vehicle Details
+document.getElementById("vehicleName").textContent = vehicle;
+document.getElementById("bookingId").textContent = bookingId;
+
+// Bill Details
+document.getElementById("rent").textContent =
+"₹" + rent.toLocaleString();
+
+document.getElementById("fuel").textContent =
+"₹" + fuel.toLocaleString();
+
+document.getElementById("extra").textContent =
+"₹" + extra.toLocaleString();
+
+document.getElementById("damage").textContent =
+"₹" + damage.toLocaleString();
+
+document.getElementById("deposit").textContent =
+"- ₹" + deposit.toLocaleString();
+
+document.getElementById("gst").textContent =
+"₹" + gst.toLocaleString();
+
+document.getElementById("total").textContent =
+"₹" + total.toLocaleString();
+
+// Settlement Page Link
+document.getElementById("settlementBtn").href =
+`payment-settlement.html?vehicle=${encodeURIComponent(vehicle)}&bookingId=${encodeURIComponent(bookingId)}&pickup=${encodeURIComponent(pickup)}&return=${encodeURIComponent(ret)}&rent=${rent}&deposit=${deposit}&gst=${gst}&total=${total}`;
+
+</script>
+
+<script src="../assets/js/script.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Invoice | DriveZone</title>
+
+<link rel="stylesheet" href="../assets/css/style.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+<h2> DriveZone</h2>
+</div>
+
+<nav>
+
+<a href="../index.html">Home</a>
+<a href="vehicles.html">Vehicles</a>
+<a href="my-bookings.html">My Bookings</a>
+
+</nav>
+
+</header>
+
+<section class="invoice-section">
+
+<div class="invoice-card">
+
+<div class="invoice-header">
+
+<h1>Invoice</h1>
+
+<h3>Invoice No : INV-20260001</h3>
+
+</div>
+
+<hr>
+
+<div class="invoice-details">
+
+<div>
+
+<h3>Customer Details</h3>
+
+<p><strong>Name :</strong> Chaitanya</p>
+
+<p><strong>Email :</strong> demo@gmail.com</p>
+
+<p><strong>Phone :</strong> +91 9876543210</p>
+
+</div>
+
+<div>
+
+<h3>Booking Details</h3>
+
+<p><strong>Booking ID :</strong> <span id="bookingId">Loading...</span></p>
+
+<p><strong>Vehicle :</strong> <span id="vehicleName">Loading...</span></p>
+
+<p><strong>Pickup :</strong> <span id="pickupDate">Loading...</span></p>
+
+<p><strong>Return :</strong> <span id="returnDate">Loading...</span></p>
+
+</div>
+
+</div>
+
+<table class="invoice-table">
+
+<tr>
+<th>Description</th>
+<th>Amount</th>
+</tr>
+
+<tr>
+<td>Rental Charges</td>
+<td id="rent">₹0</td>
+</tr>
+
+<tr>
+<td>Extra Hours</td>
+<td id="extra">₹500</td>
+</tr>
+
+<tr>
+<td>Damage Charges</td>
+<td id="damage">₹0</td>
+</tr>
+
+<tr>
+<td>GST (18%)</td>
+<td id="gst">₹0</td>
+</tr>
+
+<tr>
+<td>Security Deposit Refund</td>
+<td id="deposit">- ₹0</td>
+</tr>
+
+<tr class="invoice-total">
+<td>Total Paid</td>
+<td id="totalPaid">₹0</td>
+</tr>
+
+</table>
+
+<div class="payment-status">
+
+<h3>
+Payment Status :
+<span class="paid">
+Paid ✅
+</span>
+</h3>
+
+</div>
+
+<div class="invoice-buttons">
+
+<button onclick="window.print()" class="btn">
+Print Invoice
+</button>
+
+<a href="rating-review.html" class="btn2">
+Rate Your Ride
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+
+const vehicle = params.get("vehicle");
+const bookingId = params.get("bookingId");
+const pickup = params.get("pickup");
+const ret = params.get("return");
+
+const rent = Number(params.get("rent")) || 0;
+const deposit = Number(params.get("deposit")) || 0;
+const gst = Number(params.get("gst")) || 0;
+
+const extra = 500;
+const damage = 0;
+const total = Number(params.get("total")) || (rent + extra + gst - deposit);
+
+document.getElementById("bookingId").textContent = bookingId || "-";
+document.getElementById("vehicleName").textContent = vehicle || "-";
+document.getElementById("pickupDate").textContent = pickup || "-";
+document.getElementById("returnDate").textContent = ret || "-";
+
+document.getElementById("rent").textContent = "₹" + rent.toLocaleString();
+document.getElementById("extra").textContent = "₹" + extra.toLocaleString();
+document.getElementById("damage").textContent = "₹" + damage.toLocaleString();
+document.getElementById("gst").textContent = "₹" + gst.toLocaleString();
+document.getElementById("deposit").textContent = "- ₹" + deposit.toLocaleString();
+document.getElementById("totalPaid").textContent = "₹" + total.toLocaleString();
+
+</script>
+
+<script src="../assets/js/script.js"></script>
+
+</body>
+</html>

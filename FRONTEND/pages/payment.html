@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Payment | DriveZone</title>
+
+<link rel="stylesheet" href="../assets/css/style.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+<h2> DriveZone</h2>
+</div>
+
+<nav>
+
+<a href="../index.html">Home</a>
+<a href="vehicles.html">Vehicles</a>
+<a href="my-bookings.html">My Bookings</a>
+
+</nav>
+
+</header>
+
+<section class="payment-section">
+
+<div class="payment-container">
+
+<h1>Payment</h1>
+
+<p>Select your preferred payment method</p>
+
+<div class="amount-box">
+
+<h2>Total Payable</h2>
+
+<h1 id="totalAmount">Loading...</h1>
+
+</div>
+
+<form id="paymentForm">
+
+<div class="payment-method">
+
+<label>
+<input type="radio" name="payment" checked>
+💳 Credit / Debit Card
+</label>
+
+<label>
+<input type="radio" name="payment">
+📱 UPI
+</label>
+
+<label>
+<input type="radio" name="payment">
+🏦 Net Banking
+</label>
+
+<label>
+<input type="radio" name="payment">
+💵 Cash On Pickup
+</label>
+
+</div>
+
+<div class="input-box">
+
+<label>Coupon Code</label>
+
+<input
+type="text"
+placeholder="Enter Coupon Code">
+
+</div>
+
+<button type="submit" class="btn">
+Pay Now
+</button>
+
+</form>
+
+</div>
+
+</section>
+
+<script>
+
+const API="http://127.0.0.1:8000/api";
+
+const params=new URLSearchParams(window.location.search);
+
+const vehicleId=params.get("id");
+const pickup=params.get("pickup");
+const ret=params.get("return");
+
+async function loadPayment(){
+
+    const res=await fetch(`${API}/vehicles/${vehicleId}`);
+    const vehicle=await res.json();
+
+    const d1=new Date(pickup);
+    const d2=new Date(ret);
+
+    const days=Math.ceil((d2-d1)/(1000*60*60*24));
+
+    const rent=days*vehicle.price_per_day;
+    const deposit=vehicle.security_deposit;
+    const gst=rent*0.18;
+
+    const total=rent+deposit+gst;
+
+    document.getElementById("totalAmount").innerHTML=
+    "₹"+total.toLocaleString();
+
+}
+
+loadPayment();
+
+document.getElementById("paymentForm").addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const btn=document.querySelector("button[type='submit']");
+
+    btn.disabled=true;
+    btn.innerHTML="Processing Payment...";
+
+    setTimeout(function(){
+
+        window.location.href=
+        `processing.html?id=${vehicleId}&pickup=${pickup}&return=${ret}`;
+
+    },2000);
+
+});
+
+</script>
+
+<script src="../assets/js/script.js"></script>
+
+</body>
+
+</html>
