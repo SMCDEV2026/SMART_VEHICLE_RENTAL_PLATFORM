@@ -24,39 +24,35 @@ from app.routers import vehicles_new as vehicles_router
 
 
 # ====================================================
-# Create Tables (Only Missing Tables)
-# ====================================================
-#Base.metadata.create_all(bind=engine)
-
-# ====================================================
 # FastAPI
 # ====================================================
+
 app = FastAPI(
     title="Smart Vehicle Rental Platform API",
-    description="DRIVEZONE",
+    description="AI Powered Smart Vehicle Rental Platform",
     version="2.0.0",
 )
+
 
 # ====================================================
 # CORS
 # ====================================================
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://smart-vehicle-rental-platform-ten.vercel.app",
-        "http://localhost:3000",
-        "http://127.0.0.1:5500",
-        "http://localhost:5500",
-        "http://127.0.0.1:8000",
     ],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+
 # ====================================================
 # Upload Folder
 # ====================================================
+
 uploads = Path("BACKEND/uploads")
 uploads.mkdir(parents=True, exist_ok=True)
 
@@ -66,10 +62,16 @@ app.mount(
     name="uploads",
 )
 
+
 # ====================================================
 # API Routers
 # ====================================================
-app.include_router(auth.router, prefix="/api", tags=["Authentication"])
+
+app.include_router(
+    auth.router,
+    prefix="/api",
+    tags=["Authentication"],
+)
 
 app.include_router(
     vehicles_router.router,
@@ -107,9 +109,11 @@ app.include_router(
     tags=["Admin"],
 )
 
+
 # ====================================================
 # Root
 # ====================================================
+
 @app.get("/", tags=["System"])
 def root():
     return {
@@ -129,37 +133,38 @@ def root():
             "Hidden Deal Finder",
             "Vehicle Reviews",
             "Razorpay Payment",
-            "Admin Dashboard"
-        ]
+            "Admin Dashboard",
+        ],
     }
 
 
 # ====================================================
 # Health Check
 # ====================================================
+
 @app.get("/health", tags=["System"])
 def health():
     return {
-        "status": "healthy"
+        "status": "healthy",
     }
 
 
 # ====================================================
 # Database Test
 # ====================================================
+
 @app.get("/db-test", tags=["System"])
 def database_test():
 
     db = SessionLocal()
 
     try:
-
         db.execute(text("SELECT 1"))
 
         return {
             "database": "Connected",
             "message": "Supabase PostgreSQL Connected Successfully",
-            "status": True
+            "status": True,
         }
 
     except Exception as e:
@@ -167,7 +172,7 @@ def database_test():
         return {
             "database": "Disconnected",
             "status": False,
-            "error": str(e)
+            "error": str(e),
         }
 
     finally:
@@ -177,6 +182,7 @@ def database_test():
 # ====================================================
 # Startup Event
 # ====================================================
+
 @app.on_event("startup")
 def startup():
 
@@ -185,15 +191,17 @@ def startup():
     print("=" * 60)
     print(" Server Started Successfully")
     print(" Database Connected")
-    print(" Swagger Docs : http://127.0.0.1:8000/docs")
-    print(" Health Check : http://127.0.0.1:8000/health")
-    print(" Database Test: http://127.0.0.1:8000/db-test")
+    print(" CORS Enabled for Vercel Frontend")
+    print(" Swagger Docs : /docs")
+    print(" Health Check : /health")
+    print(" Database Test: /db-test")
     print("=" * 60)
 
 
 # ====================================================
 # Shutdown Event
 # ====================================================
+
 @app.on_event("shutdown")
 def shutdown():
     print("Server Stopped")
