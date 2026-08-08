@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = 'http://localhost:8000/api';
+const API_BASE_URL = 'https://smart-vehicle-rental-platform-1.onrender.com';
 
 // Axios-like fetch wrapper
 const api = {
