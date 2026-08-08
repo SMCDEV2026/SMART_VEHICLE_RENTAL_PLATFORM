@@ -18,7 +18,7 @@
 const params = new URLSearchParams(window.location.search);
 const vehicleId = params.get("id");
 
-fetch(`http://127.0.0.1:8000/api/vehicles/${vehicleId}`)
+fetch(`https://smart-vehicle-rental-platform-1.onrender.com/api/vehicles/${vehicleId}`)
 .then(res => res.json())
 .then(vehicle => {
 
