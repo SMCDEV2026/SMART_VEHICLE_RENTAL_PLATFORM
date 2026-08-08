@@ -33,7 +33,7 @@ from app.routers import vehicles_new as vehicles_router
 # ====================================================
 app = FastAPI(
     title="Smart Vehicle Rental Platform API",
-    description="AI Powered Smart Vehicle Rental Platform",
+    description="DRIVEZONE",
     version="2.0.0",
 )
 
