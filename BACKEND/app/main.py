@@ -42,7 +42,7 @@ app = FastAPI(
 # ====================================================
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Change in production
+    allow_origins=["https://smart-vehicle-rental-platform-ten.vercel.app"],  # Change in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
