@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8000/api';
+const API_URL = 'https://smart-vehicle-rental-platform-1.onrender.com';
 let currentUser = null;
 let authToken = null;
 let currentVehicle = null;
