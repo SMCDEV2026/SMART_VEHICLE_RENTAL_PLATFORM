@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -8,590 +10,226 @@
 
     <link rel="stylesheet" href="../assets/css/style.css">
 
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-    >
-</head>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
+</head>
+<script>
+const params = new URLSearchParams(window.location.search);
+const vehicleId = params.get("id");
+
+fetch(`http://127.0.0.1:8000/api/vehicles/${vehicleId}`)
+.then(res => res.json())
+.then(vehicle => {
+
+document.getElementById("vehicleName").innerHTML =
+vehicle.brand + " " + vehicle.model;
+
+document.getElementById("vehiclePrice").innerHTML =
+"₹" + vehicle.price_per_day + " / Day";
+
+document.getElementById("fuelType").innerHTML =
+vehicle.fuel_type;
+
+document.getElementById("transmission").innerHTML =
+vehicle.transmission;
+
+document.getElementById("seats").innerHTML =
+vehicle.seats + " Seats";
+
+document.getElementById("location").innerHTML =
+vehicle.location;
+
+document.getElementById("vehicleImage").src =
+vehicle.image_url;
+
+document.getElementById("vehicleDescription").innerHTML =
+vehicle.brand + " " + vehicle.model +
+" is available for rent in excellent condition.";
+
+document.getElementById("bookBtn").href =
+"booking.html?id=" + vehicle.id;
+
+});
+</script>
 <body>
 
-    <!-- Header -->
-    <header>
-        <div class="logo">
-            <h2>DriveZone</h2>
-        </div>
+<header>
 
-        <nav>
-            <a href="../index.html">Home</a>
-            <a href="vehicles.html">Vehicles</a>
-            <a href="my-bookings.html">My Bookings</a>
-            <a href="contact.html">Contact</a>
-        </nav>
-    </header>
+    <div class="logo">
+        <h2>DriveZone</h2>
+    </div>
 
+    <nav>
 
-    <!-- Vehicle Details -->
-    <main class="vehicle-details-page">
+        <a href="../index.html">Home</a>
+        <a href="vehicles.html">Vehicles</a>
+        <a href="my-bookings.html">My Bookings</a>
+        <a href="contact.html">Contact</a>
 
-        <div class="vehicle-details-container">
+    </nav>
 
-            <!-- Vehicle Image -->
-            <div class="vehicle-image">
-                <img
-                    id="vehicleImage"
-                    src=""
-                    alt="Vehicle"
-                    onerror="this.src='../assets/images/default-car.jpg';"
-                >
-            </div>
+</header>
 
+<section class="vehicle-details">
 
-            <!-- Vehicle Information -->
-            <div class="vehicle-info">
+    <div class="vehicle-image">
 
-                <h1 id="vehicleName">Loading vehicle...</h1>
+        <img id="vehicleImage" src="" alt="Vehicle">
 
-                <div class="rating">
-                    ⭐⭐⭐⭐⭐ <span>(4.9/5)</span>
-                </div>
+    </div>
 
-                <h2 id="vehiclePrice">₹0 / Day</h2>
+    <div class="vehicle-info">
 
-                <p id="vehicleDescription">
-                    Loading vehicle description...
-                </p>
+        <h1 id="vehicleName"></h1>
 
+        <div class="rating">
 
-                <!-- Specifications -->
-                <div class="specifications">
-
-                    <div class="spec">
-                        <i class="fa-solid fa-gas-pump"></i>
-                        <span id="fuelType">Loading...</span>
-                    </div>
-
-                    <div class="spec">
-                        <i class="fa-solid fa-gears"></i>
-                        <span id="transmission">Loading...</span>
-                    </div>
-
-                    <div class="spec">
-                        <i class="fa-solid fa-users"></i>
-                        <span id="seats">Loading...</span>
-                    </div>
-
-                    <div class="spec">
-                        <i class="fa-solid fa-road"></i>
-                        <span>Unlimited KM</span>
-                    </div>
-
-                </div>
-
-
-                <!-- Pickup Location -->
-                <h3>Pickup Location</h3>
-
-                <p id="location">
-                    Loading...
-                </p>
-
-
-                <!-- Availability -->
-                <h3>Available</h3>
-
-                <p
-                    style="color:green;font-weight:bold;"
-                    id="availability"
-                >
-                    ✔ Checking availability...
-                </p>
-
-
-                <!-- Buttons -->
-                <div class="detail-buttons">
-
-                    <a
-                        id="bookBtn"
-                        href="#"
-                        class="btn"
-                    >
-                        Book Now
-                    </a>
-
-                    <a
-                        href="vehicles.html"
-                        class="btn2"
-                    >
-                        Back
-                    </a>
-
-                </div>
-
-            </div>
+            ⭐⭐⭐⭐⭐ (4.9/5)
 
         </div>
 
-
-        <!-- Vehicle Features -->
-        <section class="vehicle-features">
-
-            <h2>Vehicle Features</h2>
-
-            <div class="feature-grid">
-
-                <div>✔ Air Conditioner</div>
-
-                <div>✔ Bluetooth</div>
-
-                <div>✔ GPS Navigation</div>
-
-                <div>✔ Reverse Camera</div>
-
-                <div>✔ ABS</div>
-
-                <div>✔ Airbags</div>
-
-                <div>✔ USB Charging</div>
-
-                <div>✔ Music System</div>
-
-            </div>
-
-        </section>
-
-
-        <!-- Customer Reviews -->
-        <section class="customer-reviews">
-
-            <h2>Customer Reviews</h2>
-
-            <div class="review-card">
-
-                <h3>
-                    Rahul Sharma ⭐⭐⭐⭐⭐
-                </h3>
-
-                <p>
-                    Excellent condition. Very smooth driving experience.
-                </p>
-
-            </div>
-
-
-            <div class="review-card">
-
-                <h3>
-                    Priya Patel ⭐⭐⭐⭐☆
-                </h3>
-
-                <p>
-                    Clean vehicle and quick pickup process.
-                </p>
-
-            </div>
-
-        </section>
-
-    </main>
-
-
-    <!-- Footer -->
-    <footer>
+        <h2 id="vehiclePrice"></h2>
 
         <p>
-            © 2026 DriveZone
+
+           <p id="vehicleDescription"></p>
+
         </p>
 
-    </footer>
+        <div class="specifications">
 
+            <div class="spec">
 
-    <!-- ================================================= -->
-    <!-- VEHICLE API SCRIPT -->
-    <!-- ================================================= -->
+                <i class="fa-solid fa-gas-pump"></i>
 
-    <script>
+                <span id="fuelType"></span>
 
-        /*
-         * IMPORTANT:
-         * Backend is hosted on Render.
-         */
-        const API_BASE_URL =
-            "https://smart-vehicle-rental-platform-1.onrender.com/api";
+            </div>
 
+            <div class="spec">
 
-        /*
-         * Get vehicle ID from URL
-         *
-         * Example:
-         * vehicle-details.html?id=4
-         */
-        const params =
-            new URLSearchParams(window.location.search);
+                <i class="fa-solid fa-gears"></i>
 
-        const vehicleId =
-            params.get("id");
+                <span id="transmission"></span>
 
+            </div>
 
-        /*
-         * Convert relative image URL
-         * into full Render URL.
-         */
-        function getFullImageUrl(imageUrl) {
+            <div class="spec">
 
-            if (!imageUrl) {
-                return "";
-            }
+                <i class="fa-solid fa-users"></i>
 
-            /*
-             * Already complete URL
-             */
-            if (
-                imageUrl.startsWith("http://") ||
-                imageUrl.startsWith("https://")
-            ) {
-                return imageUrl;
-            }
+                <span id="seats"></span>
 
+            </div>
 
-            /*
-             * Relative URL
-             *
-             * Example:
-             * /uploads/car.jpg
-             *
-             * becomes:
-             * https://smart-vehicle-rental-platform-1.onrender.com/uploads/car.jpg
-             */
-            if (imageUrl.startsWith("/")) {
+            <div class="spec">
 
-                return (
-                    "https://smart-vehicle-rental-platform-1.onrender.com"
-                    + imageUrl
-                );
+                <i class="fa-solid fa-road"></i>
 
-            }
+                <span>Unlimited KM</span>
 
+            </div>
 
-            return (
-                "https://smart-vehicle-rental-platform-1.onrender.com/"
-                + imageUrl
-            );
-        }
+        </div>
 
+        <h3>Pickup Location</h3>
 
-        /*
-         * Load vehicle details
-         */
-        async function loadVehicle() {
+        <p id="location"></p>
 
-            if (!vehicleId) {
+        <h3>Available</h3>
 
-                console.error(
-                    "Vehicle ID is missing from URL"
-                );
+        <p style="color:green;font-weight:bold;">
+            ✔ Available Today
+        </p>
 
-                document.getElementById(
-                    "vehicleName"
-                ).textContent = "Vehicle not found";
+        <div class="detail-buttons">
 
-                return;
-            }
+            <a id="bookBtn" href="#" class="btn">
 
+                Book Now
 
-            try {
+            </a>
 
-                console.log(
-                    "Loading vehicle:",
-                    vehicleId
-                );
+            <a href="vehicles.html" class="btn2">
 
+                Back
 
-                /*
-                 * =========================================
-                 * 1. GET VEHICLE DETAILS
-                 * =========================================
-                 */
+            </a>
 
-                const vehicleResponse =
-                    await fetch(
-                        `${API_BASE_URL}/vehicles/${vehicleId}`
-                    );
+        </div>
 
+    </div>
 
-                console.log(
-                    "Vehicle response status:",
-                    vehicleResponse.status
-                );
+</section>
 
+<section class="features-section">
 
-                if (!vehicleResponse.ok) {
+    <h2>Vehicle Features</h2>
 
-                    throw new Error(
-                        `Vehicle API error: ${vehicleResponse.status}`
-                    );
+    <div class="feature-grid">
 
-                }
+        <div>✔ Air Conditioner</div>
 
+        <div>✔ Bluetooth</div>
 
-                const vehicle =
-                    await vehicleResponse.json();
+        <div>✔ GPS Navigation</div>
 
+        <div>✔ Reverse Camera</div>
 
-                console.log(
-                    "Vehicle:",
-                    vehicle
-                );
+        <div>✔ ABS</div>
 
+        <div>✔ Airbags</div>
 
-                /*
-                 * =========================================
-                 * 2. DISPLAY VEHICLE DETAILS
-                 * =========================================
-                 */
+        <div>✔ USB Charging</div>
 
-                document.getElementById(
-                    "vehicleName"
-                ).textContent =
-                    `${vehicle.brand || ""} ${vehicle.model || vehicle.name || ""}`;
+        <div>✔ Music System</div>
 
+    </div>
 
-                document.getElementById(
-                    "vehiclePrice"
-                ).textContent =
-                    `₹${vehicle.price_per_day || 0} / Day`;
+</section>
 
+<section class="reviews">
 
-                document.getElementById(
-                    "fuelType"
-                ).textContent =
-                    vehicle.fuel_type || "N/A";
+    <h2>Customer Reviews</h2>
 
+    <div class="review-card">
 
-                document.getElementById(
-                    "transmission"
-                ).textContent =
-                    vehicle.transmission || "N/A";
+        <h3>Rahul Sharma ⭐⭐⭐⭐⭐</h3>
 
+        <p>
 
-                document.getElementById(
-                    "seats"
-                ).textContent =
-                    `${vehicle.seats || "N/A"} Seats`;
+            Excellent condition. Very smooth driving experience.
 
+        </p>
 
-                document.getElementById(
-                    "location"
-                ).textContent =
-                    vehicle.location ||
-                    vehicle.pickup_location ||
-                    "Pickup location available";
+    </div>
 
+    <div class="review-card">
 
-                document.getElementById(
-                    "vehicleDescription"
-                ).textContent =
-                    vehicle.description ||
-                    `${vehicle.brand || ""} ${vehicle.model || vehicle.name || ""} is available for rent in excellent condition.`;
+        <h3>Priya Patel ⭐⭐⭐⭐☆</h3>
 
+        <p>
 
-                document.getElementById(
-                    "availability"
-                ).textContent =
-                    vehicle.is_available === false
-                        ? "✖ Currently unavailable"
-                        : "✔ Available Today";
+            Clean vehicle and quick pickup process.
 
+        </p>
 
-                /*
-                 * Book button
-                 */
-                document.getElementById(
-                    "bookBtn"
-                ).href =
-                    `booking.html?id=${vehicle.id}`;
+    </div>
 
+</section>
 
-                /*
-                 * =========================================
-                 * 3. TRY IMAGE FROM VEHICLE OBJECT
-                 * =========================================
-                 */
+<footer>
 
-                const vehicleImage =
-                    vehicle.image_url ||
-                    vehicle.image ||
-                    vehicle.photo ||
-                    vehicle.image_path;
+    <p>
 
+        © 2026 DriveZone
 
-                if (vehicleImage) {
+    </p>
 
-                    const fullImageUrl =
-                        getFullImageUrl(vehicleImage);
+</footer>
 
-
-                    console.log(
-                        "Vehicle image:",
-                        fullImageUrl
-                    );
-
-
-                    document.getElementById(
-                        "vehicleImage"
-                    ).src =
-                        fullImageUrl;
-
-                }
-
-
-                /*
-                 * =========================================
-                 * 4. GET VEHICLE IMAGES
-                 * =========================================
-                 */
-
-                try {
-
-                    const imageResponse =
-                        await fetch(
-                            `${API_BASE_URL}/vehicles/${vehicleId}/images`
-                        );
-
-
-                    console.log(
-                        "Images response status:",
-                        imageResponse.status
-                    );
-
-
-                    if (imageResponse.ok) {
-
-                        const images =
-                            await imageResponse.json();
-
-
-                        console.log(
-                            "Vehicle Images:",
-                            images
-                        );
-
-
-                        /*
-                         * Backend may return:
-                         *
-                         * [
-                         *   {...}
-                         * ]
-                         *
-                         * OR:
-                         *
-                         * {
-                         *   images: [...]
-                         * }
-                         */
-
-                        let imageList = images;
-
-
-                        if (
-                            !Array.isArray(images) &&
-                            images &&
-                            Array.isArray(images.images)
-                        ) {
-
-                            imageList =
-                                images.images;
-
-                        }
-
-
-                        if (
-                            Array.isArray(imageList) &&
-                            imageList.length > 0
-                        ) {
-
-                            const firstImage =
-                                imageList[0];
-
-
-                            const imageUrl =
-                                firstImage.image_url ||
-                                firstImage.image ||
-                                firstImage.url ||
-                                firstImage.file_url ||
-                                firstImage.file_path ||
-                                firstImage.path;
-
-
-                            if (imageUrl) {
-
-                                const fullImageUrl =
-                                    getFullImageUrl(
-                                        imageUrl
-                                    );
-
-
-                                console.log(
-                                    "Final image URL:",
-                                    fullImageUrl
-                                );
-
-
-                                document.getElementById(
-                                    "vehicleImage"
-                                ).src =
-                                    fullImageUrl;
-
-                            }
-
-                        }
-
-                    }
-
-                } catch (imageError) {
-
-                    console.error(
-                        "Image API error:",
-                        imageError
-                    );
-
-                }
-
-            } catch (error) {
-
-                console.error(
-                    "Vehicle loading error:",
-                    error
-                );
-
-
-                document.getElementById(
-                    "vehicleName"
-                ).textContent =
-                    "Unable to load vehicle";
-
-
-                document.getElementById(
-                    "vehicleDescription"
-                ).textContent =
-                    "Vehicle information could not be loaded. Please try again.";
-
-            }
-
-        }
-
-
-        /*
-         * Start loading vehicle
-         * after page is ready.
-         */
-        document.addEventListener(
-            "DOMContentLoaded",
-            loadVehicle
-        );
-
-    </script>
+<script src="../assets/js/script.js"></script>
 
 </body>
 </html>
