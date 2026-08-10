@@ -3,151 +3,1117 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Payment | DriveZone</title>
+    <title>Payment | DriveZone</title>
 
-<link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <style>
+
+        .coupon-box {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 14px;
+            background: #151515;
+            border: 1px solid #2d2d2d;
+        }
+
+        .coupon-box label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 700;
+            font-size: 17px;
+        }
+
+        .coupon-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .coupon-row input {
+            flex: 1;
+            padding: 14px 18px;
+            border-radius: 9px;
+            border: 1px solid #444;
+            background: #0e0e0e;
+            color: #fff;
+            outline: none;
+            font-size: 16px;
+        }
+
+        .coupon-row input:focus {
+            border-color: #ff7a00;
+        }
+
+        .coupon-row button {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 9px;
+            background: #ff7a00;
+            color: #fff;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .coupon-row button:hover {
+            background: #ff8c1a;
+        }
+
+        .coupon-row button:disabled {
+            opacity: 0.9;
+            cursor: not-allowed;
+        }
+
+        #couponMessage {
+            margin-top: 12px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .coupon-success {
+            color: #20df91;
+        }
+
+        .coupon-error {
+            color: #ff5252;
+        }
+
+        .price-summary {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 14px;
+            background: #151515;
+            border: 1px solid #2d2d2d;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 9px 0;
+            font-size: 16px;
+        }
+
+        .price-row.discount {
+            color: #20df91;
+            font-weight: 700;
+        }
+
+        .price-row.final {
+            margin-top: 10px;
+            padding-top: 16px;
+            border-top: 1px solid #333;
+            font-size: 22px;
+            font-weight: 800;
+            color: #ff7a00;
+        }
+
+        .discount-badge {
+            display: inline-block;
+            margin-left: 7px;
+            padding: 4px 9px;
+            border-radius: 20px;
+            background: rgba(32, 223, 145, 0.12);
+            color: #20df91;
+            font-size: 12px;
+        }
+
+        .available-coupons {
+            margin-top: 12px;
+            color: #999;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .available-coupons strong {
+            color: #ff7a00;
+        }
+
+        @media (max-width: 600px) {
+
+            .coupon-row {
+                flex-direction: column;
+            }
+
+            .coupon-row button {
+                width: 100%;
+            }
+
+        }
+
+    </style>
 
 </head>
 
+
 <body>
+
 
 <header>
 
-<div class="logo">
-<h2> DriveZone</h2>
-</div>
+    <div class="logo">
+        <h2>DriveZone</h2>
+    </div>
 
-<nav>
+    <nav>
 
-<a href="../index.html">Home</a>
-<a href="vehicles.html">Vehicles</a>
-<a href="my-bookings.html">My Bookings</a>
+        <a href="../index.html">
+            Home
+        </a>
 
-</nav>
+        <a href="vehicles.html">
+            Vehicles
+        </a>
+
+        <a href="my-bookings.html">
+            My Bookings
+        </a>
+
+    </nav>
 
 </header>
 
+
+
 <section class="payment-section">
 
-<div class="payment-container">
 
-<h1>Payment</h1>
+    <div class="payment-container">
 
-<p>Select your preferred payment method</p>
 
-<div class="amount-box">
+        <h1>
+            Payment
+        </h1>
 
-<h2>Total Payable</h2>
+        <p>
+            Select your preferred payment method
+        </p>
 
-<h1 id="totalAmount">Loading...</h1>
 
-</div>
 
-<form id="paymentForm">
+        <!-- =========================================
+             TOTAL PAYABLE
+        ========================================== -->
 
-<div class="payment-method">
+        <div class="amount-box">
 
-<label>
-<input type="radio" name="payment" checked>
-💳 Credit / Debit Card
-</label>
+            <h2>
+                Total Payable
+            </h2>
 
-<label>
-<input type="radio" name="payment">
-📱 UPI
-</label>
+            <h1 id="totalAmount">
+                Loading...
+            </h1>
 
-<label>
-<input type="radio" name="payment">
-🏦 Net Banking
-</label>
+        </div>
 
-<label>
-<input type="radio" name="payment">
-💵 Cash On Pickup
-</label>
 
-</div>
 
-<div class="input-box">
+        <form id="paymentForm">
 
-<label>Coupon Code</label>
 
-<input
-type="text"
-placeholder="Enter Coupon Code">
 
-</div>
+            <!-- =====================================
+                 PAYMENT METHODS
+            ====================================== -->
 
-<button type="submit" class="btn">
-Pay Now
-</button>
+            <div class="payment-method">
 
-</form>
 
-</div>
+                <label>
+
+                    <input
+                        type="radio"
+                        name="payment"
+                        value="card"
+                        checked>
+
+                    💳 Credit / Debit Card
+
+                </label>
+
+
+
+                <label>
+
+                    <input
+                        type="radio"
+                        name="payment"
+                        value="upi">
+
+                    📱 UPI
+
+                </label>
+
+
+
+                <label>
+
+                    <input
+                        type="radio"
+                        name="payment"
+                        value="netbanking">
+
+                    🏦 Net Banking
+
+                </label>
+
+
+
+                <label>
+
+                    <input
+                        type="radio"
+                        name="payment"
+                        value="cash">
+
+                    💵 Cash On Pickup
+
+                </label>
+
+
+            </div>
+
+
+
+            <!-- =====================================
+                 COUPON
+            ====================================== -->
+
+            <div class="coupon-box">
+
+
+                <label for="couponCode">
+
+                    <i class="fa-solid fa-ticket"></i>
+
+                    Coupon Code
+
+                </label>
+
+
+
+                <div class="coupon-row">
+
+
+                    <input
+                        type="text"
+                        id="couponCode"
+                        placeholder="Enter Coupon Code"
+                        autocomplete="off">
+
+
+
+                    <button
+                        type="button"
+                        id="applyCouponBtn"
+                        onclick="applyCoupon()">
+
+                        Apply
+
+                    </button>
+
+
+                </div>
+
+
+
+                <div
+                    id="couponMessage">
+                </div>
+
+
+
+                <div class="available-coupons">
+
+                    Available Coupons:
+
+                    <br>
+
+                    <strong>NEW25</strong>
+                    → ₹4,000 OFF
+
+                    <br>
+
+                    <strong>LOYALTY</strong>
+                    → ₹5,000 OFF
+
+                    <br>
+
+                    <strong>DRIVEZONE30</strong>
+                    → ₹3,000 OFF
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =====================================
+                 PRICE SUMMARY
+            ====================================== -->
+
+            <div class="price-summary">
+
+
+                <div class="price-row">
+
+
+                    <span>
+                        Original Amount
+                    </span>
+
+
+                    <strong id="originalAmount">
+                        ₹0
+                    </strong>
+
+
+                </div>
+
+
+
+                <div
+                    class="price-row discount"
+                    id="discountRow"
+                    style="display: none;">
+
+
+                    <span>
+
+
+                        Coupon Discount
+
+
+                        <span
+                            class="discount-badge"
+                            id="discountBadge">
+
+                            COUPON
+
+                        </span>
+
+
+                    </span>
+
+
+
+                    <strong id="discountAmount">
+
+                        - ₹0
+
+                    </strong>
+
+
+                </div>
+
+
+
+                <div class="price-row final">
+
+
+                    <span>
+                        Final Payable
+                    </span>
+
+
+                    <strong id="finalAmount">
+
+                        ₹0
+
+                    </strong>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =====================================
+                 PAY BUTTON
+            ====================================== -->
+
+            <button
+                type="submit"
+                class="btn"
+                id="payNowBtn">
+
+                Pay Now
+
+            </button>
+
+
+        </form>
+
+
+    </div>
+
 
 </section>
 
+
+
 <script>
 
-const API = "https://smart-vehicle-rental-platform-1.onrender.com/api";
-const params=new URLSearchParams(window.location.search);
 
-const vehicleId=params.get("id");
-const pickup=params.get("pickup");
-const ret=params.get("return");
+// =====================================================
+// API
+// =====================================================
 
-async function loadPayment(){
+const API =
+    "https://smart-vehicle-rental-platform-1.onrender.com/api";
 
-    const res=await fetch(`${API}/vehicles/${vehicleId}`);
-    const vehicle=await res.json();
 
-    const d1=new Date(pickup);
-    const d2=new Date(ret);
 
-    const days=Math.ceil((d2-d1)/(1000*60*60*24));
+// =====================================================
+// URL PARAMETERS
+// =====================================================
 
-    const rent=days*vehicle.price_per_day;
-    const deposit=vehicle.security_deposit;
-    const gst=rent*0.18;
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
 
-    const total=rent+deposit+gst;
 
-    document.getElementById("totalAmount").innerHTML=
-    "₹"+total.toLocaleString();
+const vehicleId =
+    params.get("id");
+
+
+const pickup =
+    params.get("pickup");
+
+
+const ret =
+    params.get("return");
+
+
+
+// =====================================================
+// PAYMENT VARIABLES
+// =====================================================
+
+let originalTotal = 0;
+
+let couponDiscount = 0;
+
+let finalPayable = 0;
+
+let couponApplied = false;
+
+let appliedCouponCode = "";
+
+
+
+// =====================================================
+// COUPON LIST
+// =====================================================
+
+const coupons = {
+
+    NEW25: 4000,
+
+    LOYALTY: 5000,
+
+    DRIVEZONE30: 3000
+
+};
+
+
+
+// =====================================================
+// LOAD PAYMENT
+// =====================================================
+
+async function loadPayment() {
+
+    try {
+
+
+        if (
+            !vehicleId ||
+            !pickup ||
+            !ret
+        ) {
+
+            document.getElementById(
+                "totalAmount"
+            ).textContent =
+                "Invalid Booking";
+
+            return;
+
+        }
+
+
+
+        // Get vehicle
+
+        const res =
+            await fetch(
+                `${API}/vehicles/${vehicleId}`
+            );
+
+
+
+        if (!res.ok) {
+
+            throw new Error(
+                "Vehicle not found"
+            );
+
+        }
+
+
+
+        const vehicle =
+            await res.json();
+
+
+
+        // Dates
+
+        const d1 =
+            new Date(pickup);
+
+
+        const d2 =
+            new Date(ret);
+
+
+
+        // Number of days
+
+        const days =
+            Math.max(
+                1,
+                Math.ceil(
+                    (d2 - d1) /
+                    (1000 * 60 * 60 * 24)
+                )
+            );
+
+
+
+        // Rent
+
+        const rent =
+            days *
+            Number(
+                vehicle.price_per_day
+            );
+
+
+
+        // Security deposit
+
+        const deposit =
+            Number(
+                vehicle.security_deposit || 0
+            );
+
+
+
+        // GST
+
+        const gst =
+            Math.round(
+                rent * 0.18
+            );
+
+
+
+        // Original total
+
+        originalTotal =
+            Math.round(
+                rent +
+                deposit +
+                gst
+            );
+
+
+
+        // Initial final amount
+
+        finalPayable =
+            originalTotal;
+
+
+
+        updatePaymentUI();
+
+
+    }
+    catch (error) {
+
+
+        console.error(
+            "Payment loading error:",
+            error
+        );
+
+
+        document.getElementById(
+            "totalAmount"
+        ).textContent =
+            "Unable to load amount";
+
+
+    }
 
 }
 
+
+
+// =====================================================
+// APPLY COUPON
+// =====================================================
+
+function applyCoupon() {
+
+
+    const input =
+        document.getElementById(
+            "couponCode"
+        );
+
+
+    const message =
+        document.getElementById(
+            "couponMessage"
+        );
+
+
+    const button =
+        document.getElementById(
+            "applyCouponBtn"
+        );
+
+
+    const badge =
+        document.getElementById(
+            "discountBadge"
+        );
+
+
+
+    // Get code
+
+    const code =
+        input.value
+            .trim()
+            .toUpperCase();
+
+
+
+    // Empty
+
+    if (!code) {
+
+
+        message.className =
+            "coupon-error";
+
+
+        message.textContent =
+            "Please enter a coupon code.";
+
+
+        return;
+
+    }
+
+
+
+    // =================================================
+    // VALID COUPON
+    // =================================================
+
+    if (
+        Object.prototype.hasOwnProperty.call(
+            coupons,
+            code
+        )
+    ) {
+
+
+        const discountValue =
+            coupons[code];
+
+
+
+        // Don't allow discount above total
+
+        couponDiscount =
+            Math.min(
+                discountValue,
+                originalTotal
+            );
+
+
+
+        finalPayable =
+            Math.max(
+                0,
+                originalTotal -
+                couponDiscount
+            );
+
+
+
+        couponApplied =
+            true;
+
+
+        appliedCouponCode =
+            code;
+
+
+
+        // Success message
+
+        message.className =
+            "coupon-success";
+
+
+        message.textContent =
+            `✓ Coupon ${code} applied successfully! ₹${couponDiscount.toLocaleString("en-IN")} discount added.`;
+
+
+
+        // Button
+
+        button.textContent =
+            "Applied";
+
+
+        button.disabled =
+            true;
+
+
+
+        // Input
+
+        input.disabled =
+            true;
+
+
+
+        // Badge
+
+        badge.textContent =
+            code;
+
+
+
+        // Update amount
+
+        updatePaymentUI();
+
+
+        return;
+
+    }
+
+
+
+    // =================================================
+    // INVALID COUPON
+    // =================================================
+
+    couponDiscount =
+        0;
+
+
+    finalPayable =
+        originalTotal;
+
+
+    couponApplied =
+        false;
+
+
+    appliedCouponCode =
+        "";
+
+
+
+    message.className =
+        "coupon-error";
+
+
+    message.textContent =
+        "✕ Invalid coupon code. Try NEW25, LOYALTY or DRIVEZONE30.";
+
+
+
+    updatePaymentUI();
+
+}
+
+
+
+// =====================================================
+// UPDATE PAYMENT UI
+// =====================================================
+
+function updatePaymentUI() {
+
+
+    // Original
+
+    document.getElementById(
+        "originalAmount"
+    ).textContent =
+        "₹" +
+        originalTotal.toLocaleString(
+            "en-IN"
+        );
+
+
+
+    // Top total
+
+    document.getElementById(
+        "totalAmount"
+    ).textContent =
+        "₹" +
+        finalPayable.toLocaleString(
+            "en-IN"
+        );
+
+
+
+    // Discount
+
+    document.getElementById(
+        "discountAmount"
+    ).textContent =
+        "- ₹" +
+        couponDiscount.toLocaleString(
+            "en-IN"
+        );
+
+
+
+    // Final
+
+    document.getElementById(
+        "finalAmount"
+    ).textContent =
+        "₹" +
+        finalPayable.toLocaleString(
+            "en-IN"
+        );
+
+
+
+    // Discount row
+
+    const discountRow =
+        document.getElementById(
+            "discountRow"
+        );
+
+
+
+    if (couponDiscount > 0) {
+
+        discountRow.style.display =
+            "flex";
+
+    }
+    else {
+
+        discountRow.style.display =
+            "none";
+
+    }
+
+}
+
+
+
+// =====================================================
+// PAYMENT SUBMIT
+// =====================================================
+
+document
+    .getElementById("paymentForm")
+    .addEventListener(
+        "submit",
+        function (e) {
+
+
+            e.preventDefault();
+
+
+
+            const btn =
+                document.getElementById(
+                    "payNowBtn"
+                );
+
+
+
+            // Safety check
+
+            if (
+                finalPayable < 0
+            ) {
+
+                alert(
+                    "Invalid payment amount."
+                );
+
+                return;
+
+            }
+
+
+
+            // Disable button
+
+            btn.disabled =
+                true;
+
+
+            btn.textContent =
+                "Processing Payment...";
+
+
+
+            // =================================================
+            // PASS ALL PAYMENT DATA TO NEXT PAGE
+            // =================================================
+
+            const nextParams =
+                new URLSearchParams();
+
+
+
+            nextParams.set(
+                "id",
+                vehicleId
+            );
+
+
+
+            nextParams.set(
+                "pickup",
+                pickup
+            );
+
+
+
+            nextParams.set(
+                "return",
+                ret
+            );
+
+
+
+            // Original amount
+
+            nextParams.set(
+                "original",
+                originalTotal
+            );
+
+
+
+            // Discount
+
+            nextParams.set(
+                "discount",
+                couponDiscount
+            );
+
+
+
+            // Selected coupon
+
+            nextParams.set(
+                "coupon",
+                couponApplied
+                    ? appliedCouponCode
+                    : ""
+            );
+
+
+
+            // FINAL PAYABLE
+
+            nextParams.set(
+                "total",
+                finalPayable
+            );
+
+
+
+            // Payment method
+
+            const selectedPayment =
+                document.querySelector(
+                    'input[name="payment"]:checked'
+                );
+
+
+            if (selectedPayment) {
+
+                nextParams.set(
+                    "payment",
+                    selectedPayment.value
+                );
+
+            }
+
+
+
+            // =================================================
+            // GO TO PROCESSING
+            // =================================================
+
+            setTimeout(
+                function () {
+
+
+                    window.location.href =
+                        "processing.html?" +
+                        nextParams.toString();
+
+
+                },
+                2000
+            );
+
+
+        }
+    );
+
+
+
+// =====================================================
+// START
+// =====================================================
+
 loadPayment();
 
-document.getElementById("paymentForm").addEventListener("submit",function(e){
-
-    e.preventDefault();
-
-    const btn=document.querySelector("button[type='submit']");
-
-    btn.disabled=true;
-    btn.innerHTML="Processing Payment...";
-
-    setTimeout(function(){
-
-        window.location.href=
-        `processing.html?id=${vehicleId}&pickup=${pickup}&return=${ret}`;
-
-    },2000);
-
-});
 
 </script>
 
+
 <script src="../assets/js/script.js"></script>
+
 
 </body>
 
