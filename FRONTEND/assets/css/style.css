@@ -1997,6 +1997,7 @@ PAYMENT SETTLEMENT
     border-color: rgba(255, 107, 0, 0.3);
 }
 
+.payment-method input,
 .payment-options input {
     width: auto;
     padding: 0;
