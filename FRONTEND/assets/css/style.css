@@ -1998,10 +1998,11 @@ PAYMENT SETTLEMENT
 }
 
 .payment-options input {
-    margin-right: 10px;
+    width: auto;
+    padding: 0;
+    margin: 0 10px 0 0;
     accent-color: var(--electric);
 }
-
 .settlement-card .btn {
     width: 100%;
     border: none;
