@@ -1081,7 +1081,13 @@ footer a {
     font-size: 15px;
     background: rgba(255, 255, 255, 0.04);
     color: var(--text-main);
+    color-scheme: dark;
     transition: var(--transition);
+}
+.search-filter select option,
+.filter-bar select option {
+    background: #1B1E21;
+    color: #FFFFFF;
 }
 
 .search-filter input:focus,
