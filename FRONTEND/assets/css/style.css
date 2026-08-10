@@ -1771,8 +1771,12 @@ RETURN VEHICLE PAGE
     border-radius: var(--radius-sm);
     background: rgba(255, 255, 255, 0.04);
     color: var(--text-main);
+    color-scheme: dark;
 }
-
+.return-grid select option {
+    background: #1B1E21;
+    color: #FFFFFF;
+}
 .damage-box {
     margin-top: 32px;
 }
