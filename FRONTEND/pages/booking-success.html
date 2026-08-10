@@ -2,135 +2,599 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking Confirmed | DriveZone</title>
 
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Booking Confirmed | DriveZone</title>
+
+
+<link
+rel="stylesheet"
+href="../assets/css/style.css">
+
+
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+
 </head>
+
 
 <body>
 
-<header>
-    <div class="logo">
-        <h2> DriveZone</h2>
-    </div>
 
-    <nav>
-        <a href="../index.html">Home</a>
-        <a href="vehicles.html">Vehicles</a>
-        <a href="my-bookings.html">My Bookings</a>
-    </nav>
+<header>
+
+<div class="logo">
+
+<h2> DriveZone</h2>
+
+</div>
+
+
+<nav>
+
+<a href="../index.html">
+Home
+</a>
+
+
+<a href="vehicles.html">
+Vehicles
+</a>
+
+
+<a href="my-bookings.html">
+My Bookings
+</a>
+
+</nav>
+
 </header>
+
+
 
 <section class="success-section">
 
-    <div class="success-card">
 
-        <i class="fa-solid fa-circle-check success-big-icon"></i>
+<div class="success-card">
 
-        <h1>Booking Confirmed 🎉</h1>
 
-        <p>Your vehicle has been booked successfully.</p>
+<i
+class="fa-solid fa-circle-check success-big-icon">
+</i>
 
-        <div class="booking-details">
 
-            <p><strong>Booking ID :</strong>
-                <span id="bookingId">Loading...</span>
-            </p>
+<h1>
+Booking Confirmed 🎉
+</h1>
 
-            <p><strong>Vehicle :</strong>
-                <span id="vehicleName">Loading...</span>
-            </p>
 
-            <p><strong>Pickup Date :</strong>
-                <span id="pickupDate">Loading...</span>
-            </p>
+<p>
+Your vehicle has been booked successfully.
+</p>
 
-            <p><strong>Return Date :</strong>
-                <span id="returnDate">Loading...</span>
-            </p>
 
-            <p><strong>Pickup Location :</strong>
-                <span id="pickupLocation">Loading...</span>
-            </p>
 
-            <p><strong>Total Paid :</strong>
-                <span id="totalPaid">Loading...</span>
-            </p>
+<div class="booking-details">
 
-        </div>
 
-        <div class="success-buttons">
+<p>
 
-            <a id="pickupBtn" href="#" class="btn">
-                View Pickup Details
-            </a>
+<strong>
+Booking ID :
+</strong>
 
-            <a href="my-bookings.html" class="btn2">
-                My Bookings
-            </a>
+<span id="bookingId">
+Loading...
+</span>
 
-            <a href="../index.html" class="btn2">
-                Back to Home
-            </a>
+</p>
 
-        </div>
 
-    </div>
+
+<p>
+
+<strong>
+Vehicle :
+</strong>
+
+<span id="vehicleName">
+Loading...
+</span>
+
+</p>
+
+
+
+<p>
+
+<strong>
+Pickup Date :
+</strong>
+
+<span id="pickupDate">
+Loading...
+</span>
+
+</p>
+
+
+
+<p>
+
+<strong>
+Return Date :
+</strong>
+
+<span id="returnDate">
+Loading...
+</span>
+
+</p>
+
+
+
+<p>
+
+<strong>
+Pickup Location :
+</strong>
+
+<span id="pickupLocation">
+Loading...
+</span>
+
+</p>
+
+
+
+<p>
+
+<strong>
+Total Paid :
+</strong>
+
+<span id="totalPaid">
+Loading...
+</span>
+
+</p>
+
+
+</div>
+
+
+
+<div class="success-buttons">
+
+
+<a
+id="pickupBtn"
+href="#"
+class="btn">
+
+View Pickup Details
+
+</a>
+
+
+
+<a
+href="my-bookings.html"
+class="btn2">
+
+My Bookings
+
+</a>
+
+
+
+<a
+href="../index.html"
+class="btn2">
+
+Back to Home
+
+</a>
+
+
+</div>
+
+
+</div>
+
 
 </section>
 
+
+
 <script>
 
-const API = "https://smart-vehicle-rental-platform-1.onrender.com/api";
 
-const params = new URLSearchParams(window.location.search);
+const API =
+"https://smart-vehicle-rental-platform-1.onrender.com/api";
 
-const vehicleId = params.get("id");
-const pickup = params.get("pickup");
-const ret = params.get("return");
 
-async function loadSuccess(){
+const params =
+new URLSearchParams(
+window.location.search
+);
 
-    const res = await fetch(`${API}/vehicles/${vehicleId}`);
-    const vehicle = await res.json();
 
-    const bookingId = "SVR" + Math.floor(100000 + Math.random() * 900000);
+const vehicleId =
+params.get("id");
 
-    const vehicleName = vehicle.brand + " " + vehicle.model;
 
-    document.getElementById("bookingId").textContent = bookingId;
-    document.getElementById("vehicleName").textContent = vehicleName;
-    document.getElementById("pickupDate").textContent = pickup;
-    document.getElementById("returnDate").textContent = ret;
-    document.getElementById("pickupLocation").textContent = vehicle.location;
+const pickup =
+params.get("pickup");
 
-    const d1 = new Date(pickup);
-    const d2 = new Date(ret);
 
-    const days = Math.max(1, Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24)));
+const ret =
+params.get("return");
 
-    const rent = days * vehicle.price_per_day;
-    const deposit = vehicle.security_deposit;
-    const gst = Math.round(rent * 0.18);
-    const total = rent + deposit + gst;
 
-    document.getElementById("totalPaid").textContent =
-        "₹" + total.toLocaleString();
+// =====================================================
+// DISCOUNT DATA FROM PAYMENT PAGE
+// =====================================================
 
-    document.getElementById("pickupBtn").href =
-        `pickup.html?id=${vehicle.id}&vehicle=${encodeURIComponent(vehicleName)}&bookingId=${encodeURIComponent(bookingId)}&pickup=${encodeURIComponent(pickup)}&return=${encodeURIComponent(ret)}&location=${encodeURIComponent(vehicle.location)}&rent=${rent}&deposit=${deposit}&gst=${gst}&total=${total}`;
+const originalFromPayment =
+Number(
+params.get("original")
+);
+
+
+const discountFromPayment =
+Number(
+params.get("discount")
+);
+
+
+const totalFromPayment =
+Number(
+params.get("total")
+);
+
+
+const couponCode =
+params.get("coupon") || "";
+
+
+
+// =====================================================
+// LOAD SUCCESS PAGE
+// =====================================================
+
+async function loadSuccess() {
+
+    try {
+
+        if (
+            !vehicleId ||
+            !pickup ||
+            !ret
+        ) {
+
+            throw new Error(
+                "Invalid booking details"
+            );
+
+        }
+
+
+        const res =
+        await fetch(
+            `${API}/vehicles/${vehicleId}`
+        );
+
+
+        if (!res.ok) {
+
+            throw new Error(
+                "Vehicle not found"
+            );
+
+        }
+
+
+        const vehicle =
+        await res.json();
+
+
+        // =================================================
+        // BOOKING ID
+        // =================================================
+
+        const bookingId =
+        "SVR" +
+        Math.floor(
+            100000 +
+            Math.random() * 900000
+        );
+
+
+        // =================================================
+        // VEHICLE NAME
+        // =================================================
+
+        const vehicleName =
+        vehicle.brand +
+        " " +
+        vehicle.model;
+
+
+        // =================================================
+        // BASIC DETAILS
+        // =================================================
+
+        document.getElementById(
+            "bookingId"
+        ).textContent =
+        bookingId;
+
+
+        document.getElementById(
+            "vehicleName"
+        ).textContent =
+        vehicleName;
+
+
+        document.getElementById(
+            "pickupDate"
+        ).textContent =
+        pickup;
+
+
+        document.getElementById(
+            "returnDate"
+        ).textContent =
+        ret;
+
+
+        document.getElementById(
+            "pickupLocation"
+        ).textContent =
+        vehicle.location;
+
+
+
+        // =================================================
+        // CALCULATE ORIGINAL AMOUNT
+        // =================================================
+
+        const d1 =
+        new Date(pickup);
+
+
+        const d2 =
+        new Date(ret);
+
+
+        const days =
+        Math.max(
+            1,
+            Math.ceil(
+                (d2 - d1) /
+                (1000 * 60 * 60 * 24)
+            )
+        );
+
+
+        const rent =
+        days *
+        Number(
+            vehicle.price_per_day
+        );
+
+
+        const deposit =
+        Number(
+            vehicle.security_deposit || 0
+        );
+
+
+        const gst =
+        Math.round(
+            rent * 0.18
+        );
+
+
+        const calculatedOriginal =
+        Math.round(
+            rent +
+            deposit +
+            gst
+        );
+
+
+
+        // =================================================
+        // FINAL PAYMENT AMOUNT
+        // =================================================
+        //
+        // Priority:
+        //
+        // 1. Amount received from payment page
+        // 2. Original calculated amount
+        //
+        // =================================================
+
+        let originalTotal =
+        calculatedOriginal;
+
+
+        let discount =
+        0;
+
+
+        let total =
+        calculatedOriginal;
+
+
+
+        if (
+            Number.isFinite(
+                totalFromPayment
+            ) &&
+            totalFromPayment >= 0
+        ) {
+
+            originalTotal =
+            Number.isFinite(
+                originalFromPayment
+            )
+            &&
+            originalFromPayment > 0
+            ?
+            originalFromPayment
+            :
+            calculatedOriginal;
+
+
+            discount =
+            Number.isFinite(
+                discountFromPayment
+            )
+            ?
+            Math.max(
+                0,
+                discountFromPayment
+            )
+            :
+            0;
+
+
+            total =
+            totalFromPayment;
+
+        }
+
+
+
+        // =================================================
+        // SAFETY CHECK
+        // =================================================
+
+        total =
+        Math.max(
+            0,
+            total
+        );
+
+
+
+        // =================================================
+        // SHOW TOTAL PAID
+        // =================================================
+
+        document.getElementById(
+            "totalPaid"
+        ).textContent =
+        "₹" +
+        total.toLocaleString(
+            "en-IN"
+        );
+
+
+
+        // =================================================
+        // PICKUP DETAILS
+        // =================================================
+
+        document.getElementById(
+            "pickupBtn"
+        ).href =
+
+        `pickup.html` +
+
+        `?id=${encodeURIComponent(vehicle.id)}` +
+
+        `&vehicle=${encodeURIComponent(vehicleName)}` +
+
+        `&bookingId=${encodeURIComponent(bookingId)}` +
+
+        `&pickup=${encodeURIComponent(pickup)}` +
+
+        `&return=${encodeURIComponent(ret)}` +
+
+        `&location=${encodeURIComponent(vehicle.location)}` +
+
+        `&rent=${encodeURIComponent(rent)}` +
+
+        `&deposit=${encodeURIComponent(deposit)}` +
+
+        `&gst=${encodeURIComponent(gst)}` +
+
+        `&original=${encodeURIComponent(originalTotal)}` +
+
+        `&discount=${encodeURIComponent(discount)}` +
+
+        `&coupon=${encodeURIComponent(couponCode)}` +
+
+        `&total=${encodeURIComponent(total)}`;
+
+
+        // =================================================
+        // DEBUG
+        // =================================================
+
+        console.log(
+            "Original Amount:",
+            originalTotal
+        );
+
+
+        console.log(
+            "Coupon:",
+            couponCode
+        );
+
+
+        console.log(
+            "Discount:",
+            discount
+        );
+
+
+        console.log(
+            "Final Paid:",
+            total
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Booking confirmation error:",
+            error
+        );
+
+
+        document.getElementById(
+            "totalPaid"
+        ).textContent =
+        "Unable to load";
+
+    }
 
 }
 
+
 loadSuccess();
+
 
 </script>
 
+
 <script src="../assets/js/script.js"></script>
 
+
 </body>
+
 </html>
