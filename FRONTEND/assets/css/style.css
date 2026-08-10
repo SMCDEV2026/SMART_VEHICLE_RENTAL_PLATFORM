@@ -1643,12 +1643,11 @@ RIDE PROGRESS PAGE
 }
 
 .ride-icon {
-    font-size: 70px;
-    color: var(--electric);
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
     display: block;
-    text-align: center;
-    margin-bottom: 20px;
-    text-shadow: 0 0 30px var(--electric-glow);
+    margin: 0 auto 15px;
 }
 
 .ride-card h1 {
