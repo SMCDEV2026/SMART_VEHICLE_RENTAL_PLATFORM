@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Vehicle Details | DriveZone</title>
+    <title>Book Vehicle | DriveZone</title>
 
     <link rel="stylesheet" href="../assets/css/style.css">
 
@@ -14,50 +14,13 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 </head>
-<script>
-const params = new URLSearchParams(window.location.search);
-const vehicleId = params.get("id");
 
-fetch(`https://smart-vehicle-rental-platform-1.onrender.com/api/vehicles/${vehicleId}`)
-.then(res => res.json())
-.then(vehicle => {
-
-document.getElementById("vehicleName").innerHTML =
-vehicle.brand + " " + vehicle.model;
-
-document.getElementById("vehiclePrice").innerHTML =
-"₹" + vehicle.price_per_day + " / Day";
-
-document.getElementById("fuelType").innerHTML =
-vehicle.fuel_type;
-
-document.getElementById("transmission").innerHTML =
-vehicle.transmission;
-
-document.getElementById("seats").innerHTML =
-vehicle.seats + " Seats";
-
-document.getElementById("location").innerHTML =
-vehicle.location;
-
-document.getElementById("vehicleImage").src =
-vehicle.image_url;
-
-document.getElementById("vehicleDescription").innerHTML =
-vehicle.brand + " " + vehicle.model +
-" is available for rent in excellent condition.";
-
-document.getElementById("bookBtn").href =
-"booking.html?id=" + vehicle.id;
-
-});
-</script>
 <body>
 
 <header>
 
     <div class="logo">
-        <h2>DriveZone</h2>
+        <h2> DriveZone</h2>
     </div>
 
     <nav>
@@ -65,171 +28,318 @@ document.getElementById("bookBtn").href =
         <a href="../index.html">Home</a>
         <a href="vehicles.html">Vehicles</a>
         <a href="my-bookings.html">My Bookings</a>
-        <a href="contact.html">Contact</a>
 
     </nav>
 
 </header>
 
-<section class="vehicle-details">
 
-    <div class="vehicle-image">
+<section class="booking-section">
 
-        <img id="vehicleImage" src="" alt="Vehicle">
+<div class="booking-container">
 
-    </div>
+<h1>Book Your Vehicle</h1>
 
-    <div class="vehicle-info">
+<p>
+Fill the details below to continue booking.
+</p>
 
-        <h1 id="vehicleName"></h1>
 
-        <div class="rating">
+<form id="bookingForm">
 
-            ⭐⭐⭐⭐⭐ (4.9/5)
+<div class="booking-grid">
 
-        </div>
 
-        <h2 id="vehiclePrice"></h2>
+<div class="input-box">
 
-        <p>
+<label>Pickup Date</label>
 
-           <p id="vehicleDescription"></p>
+<input type="date" id="pickupDate" required>
 
-        </p>
+</div>
 
-        <div class="specifications">
 
-            <div class="spec">
+<div class="input-box">
 
-                <i class="fa-solid fa-gas-pump"></i>
+<label>Return Date</label>
 
-                <span id="fuelType"></span>
+<input type="date" id="returnDate" required>
 
-            </div>
+</div>
 
-            <div class="spec">
 
-                <i class="fa-solid fa-gears"></i>
+<div class="input-box">
 
-                <span id="transmission"></span>
+<label>Pickup Time</label>
 
-            </div>
+<input type="time" id="pickupTime" required>
 
-            <div class="spec">
+</div>
 
-                <i class="fa-solid fa-users"></i>
 
-                <span id="seats"></span>
+<div class="input-box">
 
-            </div>
+<label>Return Time</label>
 
-            <div class="spec">
+<input type="time" id="returnTime" required>
 
-                <i class="fa-solid fa-road"></i>
+</div>
 
-                <span>Unlimited KM</span>
 
-            </div>
+<div class="input-box">
 
-        </div>
+<label>Pickup Location</label>
 
-        <h3>Pickup Location</h3>
+<select id="pickupLocation" required>
 
-        <p id="location"></p>
+<option value="">Select Location</option>
 
-        <h3>Available</h3>
+<option>Mumbai Airport</option>
 
-        <p style="color:green;font-weight:bold;">
-            ✔ Available Today
-        </p>
+<option>Thane</option>
 
-        <div class="detail-buttons">
+<option>Navi Mumbai</option>
 
-            <a id="bookBtn" href="#" class="btn">
+<option>Pune</option>
 
-                Book Now
+</select>
 
-            </a>
+</div>
 
-            <a href="vehicles.html" class="btn2">
 
-                Back
+<div class="input-box">
 
-            </a>
+<label>Return Location</label>
 
-        </div>
+<select id="returnLocation" required>
 
-    </div>
+<option value="">Select Location</option>
+
+<option>Mumbai Airport</option>
+
+<option>Thane</option>
+
+<option>Navi Mumbai</option>
+
+<option>Pune</option>
+
+</select>
+
+</div>
+
+
+</div>
+
+
+<div class="booking-summary">
+
+<h2>Estimated Price</h2>
+
+<h3 id="price">Loading...</h3>
+
+<p>
+Security Deposit :
+<b id="deposit">Loading...</b>
+</p>
+
+<p>GST Included</p>
+
+</div>
+
+
+<button type="submit" class="btn">
+
+Check Availability
+
+</button>
+
+
+</form>
+
+</div>
 
 </section>
 
-<section class="features-section">
 
-    <h2>Vehicle Features</h2>
+<script>
 
-    <div class="feature-grid">
+document.addEventListener("DOMContentLoaded", async function () {
 
-        <div>✔ Air Conditioner</div>
+    const API =
+        "https://smart-vehicle-rental-platform-1.onrender.com/api";
 
-        <div>✔ Bluetooth</div>
 
-        <div>✔ GPS Navigation</div>
+    const params =
+        new URLSearchParams(window.location.search);
 
-        <div>✔ Reverse Camera</div>
 
-        <div>✔ ABS</div>
+    const vehicleId =
+        params.get("id");
 
-        <div>✔ Airbags</div>
 
-        <div>✔ USB Charging</div>
+    /*
+        Make sure vehicle ID exists
+    */
 
-        <div>✔ Music System</div>
+    if (!vehicleId) {
 
-    </div>
+        document.getElementById("price").textContent =
+            "Vehicle not selected";
 
-</section>
+        document.getElementById("deposit").textContent =
+            "N/A";
 
-<section class="reviews">
+        return;
 
-    <h2>Customer Reviews</h2>
+    }
 
-    <div class="review-card">
 
-        <h3>Rahul Sharma ⭐⭐⭐⭐⭐</h3>
+    /*
+        Load vehicle information
+    */
 
-        <p>
+    try {
 
-            Excellent condition. Very smooth driving experience.
+        const response =
+            await fetch(`${API}/vehicles/${vehicleId}`);
 
-        </p>
 
-    </div>
+        if (!response.ok) {
 
-    <div class="review-card">
+            throw new Error(
+                "Unable to load vehicle"
+            );
 
-        <h3>Priya Patel ⭐⭐⭐⭐☆</h3>
+        }
 
-        <p>
 
-            Clean vehicle and quick pickup process.
+        const vehicle =
+            await response.json();
 
-        </p>
 
-    </div>
+        /*
+            Vehicle rental price
+        */
 
-</section>
+        const price =
+            Number(vehicle.price_per_day || 0);
 
-<footer>
 
-    <p>
+        document.getElementById("price").textContent =
+            `₹${price.toLocaleString("en-IN")} / Day`;
 
-        © 2026 DriveZone
 
-    </p>
+        /*
+            Security deposit
+        */
 
-</footer>
+        const deposit =
+            Number(vehicle.security_deposit || 0);
+
+
+        document.getElementById("deposit").textContent =
+            `₹${deposit.toLocaleString("en-IN")}`;
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Vehicle loading error:",
+            error
+        );
+
+
+        /*
+            Don't break the page
+            if backend is temporarily unavailable.
+        */
+
+        document.getElementById("price").textContent =
+            "Price unavailable";
+
+
+        document.getElementById("deposit").textContent =
+            "Contact support";
+
+    }
+
+
+    /*
+        Booking form
+    */
+
+    document
+        .getElementById("bookingForm")
+        .addEventListener("submit", function (e) {
+
+            e.preventDefault();
+
+
+            const pickup =
+                document.getElementById("pickupDate").value;
+
+
+            const ret =
+                document.getElementById("returnDate").value;
+
+
+            const pickupTime =
+                document.getElementById("pickupTime").value;
+
+
+            const returnTime =
+                document.getElementById("returnTime").value;
+
+
+            const pickupLocation =
+                document.getElementById("pickupLocation").value;
+
+
+            const returnLocation =
+                document.getElementById("returnLocation").value;
+
+
+            /*
+                Validate dates
+            */
+
+            if (ret < pickup) {
+
+                alert(
+                    "Return date cannot be before pickup date."
+                );
+
+                return;
+
+            }
+
+
+            /*
+                Go to availability page
+            */
+
+            window.location.href =
+                `availability.html?id=${vehicleId}` +
+                `&pickup=${encodeURIComponent(pickup)}` +
+                `&return=${encodeURIComponent(ret)}` +
+                `&pickupTime=${encodeURIComponent(pickupTime)}` +
+                `&returnTime=${encodeURIComponent(returnTime)}` +
+                `&pickupLocation=${encodeURIComponent(pickupLocation)}` +
+                `&returnLocation=${encodeURIComponent(returnLocation)}`;
+
+        });
+
+});
+
+
+</script>
+
 
 <script src="../assets/js/script.js"></script>
 
+
 </body>
+
 </html>
