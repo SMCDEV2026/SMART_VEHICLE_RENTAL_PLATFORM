@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Book Vehicle | DriveZone</title>
+    <title>Vehicle Details | DriveZone</title>
 
     <link rel="stylesheet" href="../assets/css/style.css">
 
@@ -20,7 +20,7 @@
 <header>
 
     <div class="logo">
-        <h2> DriveZone</h2>
+        <h2>DriveZone</h2>
     </div>
 
     <nav>
@@ -28,137 +28,186 @@
         <a href="../index.html">Home</a>
         <a href="vehicles.html">Vehicles</a>
         <a href="my-bookings.html">My Bookings</a>
+        <a href="contact.html">Contact</a>
 
     </nav>
 
 </header>
 
 
-<section class="booking-section">
+<section class="vehicle-details">
 
-<div class="booking-container">
+    <div class="vehicle-image">
 
-<h1>Book Your Vehicle</h1>
+        <img id="vehicleImage" src="" alt="Vehicle">
 
-<p>
-Fill the details below to continue booking.
-</p>
+    </div>
 
 
-<form id="bookingForm">
+    <div class="vehicle-info">
 
-<div class="booking-grid">
+        <h1 id="vehicleName">Loading...</h1>
 
+        <div class="rating">
 
-<div class="input-box">
+            ⭐⭐⭐⭐⭐ (4.9/5)
 
-<label>Pickup Date</label>
+        </div>
 
-<input type="date" id="pickupDate" required>
+        <h2 id="vehiclePrice">Loading...</h2>
 
-</div>
+        <p id="vehicleDescription">
+            Loading vehicle details...
+        </p>
 
 
-<div class="input-box">
+        <div class="specifications">
 
-<label>Return Date</label>
+            <div class="spec">
 
-<input type="date" id="returnDate" required>
+                <i class="fa-solid fa-gas-pump"></i>
 
-</div>
+                <span id="fuelType">Loading...</span>
 
+            </div>
 
-<div class="input-box">
 
-<label>Pickup Time</label>
+            <div class="spec">
 
-<input type="time" id="pickupTime" required>
+                <i class="fa-solid fa-gears"></i>
 
-</div>
+                <span id="transmission">Loading...</span>
 
+            </div>
 
-<div class="input-box">
 
-<label>Return Time</label>
+            <div class="spec">
 
-<input type="time" id="returnTime" required>
+                <i class="fa-solid fa-users"></i>
 
-</div>
+                <span id="seats">Loading...</span>
 
+            </div>
 
-<div class="input-box">
 
-<label>Pickup Location</label>
+            <div class="spec">
 
-<select id="pickupLocation" required>
+                <i class="fa-solid fa-road"></i>
 
-<option value="">Select Location</option>
+                <span>Unlimited KM</span>
 
-<option>Mumbai Airport</option>
+            </div>
 
-<option>Thane</option>
+        </div>
 
-<option>Navi Mumbai</option>
 
-<option>Pune</option>
+        <h3>Pickup Location</h3>
 
-</select>
+        <p id="location">
+            Loading...
+        </p>
 
-</div>
 
+        <h3>Available</h3>
 
-<div class="input-box">
+        <p style="color:green;font-weight:bold;">
 
-<label>Return Location</label>
+            ✔ Available Today
 
-<select id="returnLocation" required>
+        </p>
 
-<option value="">Select Location</option>
 
-<option>Mumbai Airport</option>
+        <div class="detail-buttons">
 
-<option>Thane</option>
+            <a id="bookBtn" href="#" class="btn">
 
-<option>Navi Mumbai</option>
+                Book Now
 
-<option>Pune</option>
+            </a>
 
-</select>
 
-</div>
+            <a href="vehicles.html" class="btn2">
 
+                Back
 
-</div>
+            </a>
 
+        </div>
 
-<div class="booking-summary">
-
-<h2>Estimated Price</h2>
-
-<h3 id="price">Loading...</h3>
-
-<p>
-Security Deposit :
-<b id="deposit">Loading...</b>
-</p>
-
-<p>GST Included</p>
-
-</div>
-
-
-<button type="submit" class="btn">
-
-Check Availability
-
-</button>
-
-
-</form>
-
-</div>
+    </div>
 
 </section>
+
+
+<section class="features-section">
+
+    <h2>Vehicle Features</h2>
+
+    <div class="feature-grid">
+
+        <div>✔ Air Conditioner</div>
+
+        <div>✔ Bluetooth</div>
+
+        <div>✔ GPS Navigation</div>
+
+        <div>✔ Reverse Camera</div>
+
+        <div>✔ ABS</div>
+
+        <div>✔ Airbags</div>
+
+        <div>✔ USB Charging</div>
+
+        <div>✔ Music System</div>
+
+    </div>
+
+</section>
+
+
+<section class="reviews">
+
+    <h2>Customer Reviews</h2>
+
+
+    <div class="review-card">
+
+        <h3>Rahul Sharma ⭐⭐⭐⭐⭐</h3>
+
+        <p>
+
+            Excellent condition. Very smooth driving experience.
+
+        </p>
+
+    </div>
+
+
+    <div class="review-card">
+
+        <h3>Priya Patel ⭐⭐⭐⭐☆</h3>
+
+        <p>
+
+            Clean vehicle and quick pickup process.
+
+        </p>
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <p>
+
+        © 2026 DriveZone
+
+    </p>
+
+</footer>
 
 
 <script>
@@ -172,30 +221,209 @@ document.addEventListener("DOMContentLoaded", async function () {
     const params =
         new URLSearchParams(window.location.search);
 
-
     const vehicleId =
         params.get("id");
 
 
     /*
-        Make sure vehicle ID exists
+        Local vehicle data.
+
+        This is used if the backend is unavailable
+        or image_url is missing from the database.
     */
+
+    const localVehicles = {
+
+        "1": {
+            name: "Mahindra Scorpio N",
+            image: "../assets/vehicles/images/scor.jpg",
+            spec: "Automatic • Diesel • 7 Seats",
+            price: 4200
+        },
+
+        "3": {
+            name: "Kia Seltos",
+            image: "../assets/vehicles/images/seltos.jpg.jpeg",
+            spec: "Automatic • Petrol • 5 Seats",
+            price: 2700
+        },
+
+        "4": {
+            name: "Hyundai Verna",
+            image: "../assets/vehicles/images/verna.jpg.jpeg",
+            spec: "Automatic • Petrol • 5 Seats",
+            price: 2300
+        },
+
+        "5": {
+            name: "Honda City",
+            image: "../assets/vehicles/images/city.jpg.jpeg",
+            spec: "Automatic • Petrol • 5 Seats",
+            price: 2200
+        },
+
+        "6": {
+            name: "Tata Harrier",
+            image: "../assets/vehicles/images/harrier.jpg.jpeg",
+            spec: "Automatic • Diesel • 5 Seats",
+            price: 3300
+        },
+
+        "7": {
+            name: "Mahindra XUV700",
+            image: "../assets/vehicles/images/mahindra xuv700.jpg.jpeg",
+            spec: "Automatic • Diesel • 7 Seats",
+            price: 4500
+        },
+
+        "8": {
+            name: "MG Hector",
+            image: "../assets/vehicles/images/mg-hector-.jpg",
+            spec: "Automatic • Petrol • 5 Seats",
+            price: 3000
+        },
+
+        "9": {
+            name: "Toyota Innova Hycross",
+            image: "../assets/vehicles/images/innova.jpg",
+            spec: "Automatic • Hybrid • 7 Seats",
+            price: 5200
+        },
+
+        "10": {
+            name: "BMW X1",
+            image: "../assets/vehicles/images/bmw.jpg.jpeg",
+            spec: "Automatic • Petrol • Luxury",
+            price: 8500
+        },
+
+        "11": {
+            name: "Audi A4",
+            image: "../assets/vehicles/images/audi.jpg.jpeg",
+            spec: "Automatic • Petrol • Luxury",
+            price: 9000
+        },
+
+        "12": {
+            name: "Mercedes C-Class",
+            image: "../assets/vehicles/images/c-class.jpg.jpeg",
+            spec: "Automatic • Petrol • Luxury",
+            price: 10000
+        },
+
+        "13": {
+            name: "Tata Nexon EV",
+            image: "../assets/vehicles/images/nexon.jpg",
+            spec: "Electric • Automatic • 5 Seats",
+            price: 2800
+        },
+
+        "14": {
+            name: "Royal Enfield Hunter 350",
+            image: "../assets/vehicles/images/hunter.jpg",
+            spec: "349cc • Petrol • Manual",
+            price: 850
+        },
+
+        "15": {
+            name: "KTM Duke 390",
+            image: "../assets/vehicles/images/ktm.jpg.jpeg",
+            spec: "399cc • Petrol • Manual",
+            price: 1200
+        },
+
+        "16": {
+            name: "TVS Apache RTR 310",
+            image: "../assets/vehicles/images/apache.jpg.jpeg",
+            spec: "312cc • Petrol • Manual",
+            price: 950
+        },
+
+        "17": {
+            name: "Honda CB350",
+            image: "../assets/vehicles/images/cb350.jpg",
+            spec: "350cc • Petrol • Manual",
+            price: 900
+        },
+
+        "18": {
+            name: "Hero XPulse 200",
+            image: "../assets/vehicles/images/xpukse200.jpg",
+            spec: "200cc • Petrol • Manual",
+            price: 750
+        },
+
+        "19": {
+            name: "Honda Activa 6G",
+            image: "../assets/vehicles/images/6g.jpg.jpeg",
+            spec: "110cc • Petrol • Scooter",
+            price: 400
+        },
+
+        "20": {
+            name: "Ola S1 Pro",
+            image: "../assets/vehicles/images/olas1pro.jpg.jpeg",
+            spec: "Electric Scooter",
+            price: 650
+        },
+
+        "21": {
+            name: "MG ZS EV",
+            image: "../assets/vehicles/images/mgev.jpg.jpeg",
+            spec: "Electric • Automatic",
+            price: 3500
+        },
+
+        "22": {
+            name: "Hyundai Ioniq 5",
+            image: "../assets/vehicles/images/hyundai loniq.jpg",
+            spec: "Electric • Automatic",
+            price: 4800
+        },
+
+        "23": {
+            name: "Land Rover Defender",
+            image: "../assets/vehicles/images/defender.jpg.jpeg",
+            spec: "Luxury SUV • Automatic",
+            price: 15000
+        },
+
+        "24": {
+            name: "Ford Mustang",
+            image: "../assets/vehicles/images/mustang.jpg.jpeg",
+            spec: "Sports Car • Automatic",
+            price: 18000
+        },
+
+        "25": {
+            name: "Volkswagen Virtus",
+            image: "../assets/vehicles/images/vertius.jpg.jpeg",
+            spec: "Automatic • Petrol • 5 Seats",
+            price: 2600
+        }
+
+    };
+
 
     if (!vehicleId) {
 
-        document.getElementById("price").textContent =
-            "Vehicle not selected";
-
-        document.getElementById("deposit").textContent =
-            "N/A";
+        document.getElementById("vehicleName").textContent =
+            "Vehicle Not Found";
 
         return;
 
     }
 
 
+    const local =
+        localVehicles[vehicleId];
+
+
+    let vehicle = null;
+
+
     /*
-        Load vehicle information
+        Try backend first
     */
 
     try {
@@ -204,141 +432,232 @@ document.addEventListener("DOMContentLoaded", async function () {
             await fetch(`${API}/vehicles/${vehicleId}`);
 
 
-        if (!response.ok) {
+        if (response.ok) {
 
-            throw new Error(
-                "Unable to load vehicle"
-            );
+            vehicle =
+                await response.json();
 
         }
-
-
-        const vehicle =
-            await response.json();
-
-
-        /*
-            Vehicle rental price
-        */
-
-        const price =
-            Number(vehicle.price_per_day || 0);
-
-
-        document.getElementById("price").textContent =
-            `₹${price.toLocaleString("en-IN")} / Day`;
-
-
-        /*
-            Security deposit
-        */
-
-        const deposit =
-            Number(vehicle.security_deposit || 0);
-
-
-        document.getElementById("deposit").textContent =
-            `₹${deposit.toLocaleString("en-IN")}`;
-
 
     }
 
     catch (error) {
 
-        console.error(
-            "Vehicle loading error:",
-            error
+        console.warn(
+            "Backend unavailable. Using local vehicle data."
         );
-
-
-        /*
-            Don't break the page
-            if backend is temporarily unavailable.
-        */
-
-        document.getElementById("price").textContent =
-            "Price unavailable";
-
-
-        document.getElementById("deposit").textContent =
-            "Contact support";
 
     }
 
 
     /*
-        Booking form
+        If backend fails,
+        create vehicle data from local data.
     */
 
-    document
-        .getElementById("bookingForm")
-        .addEventListener("submit", function (e) {
+    if (!vehicle && local) {
 
-            e.preventDefault();
-
-
-            const pickup =
-                document.getElementById("pickupDate").value;
+        const parts =
+            local.name.split(" ");
 
 
-            const ret =
-                document.getElementById("returnDate").value;
+        const specs =
+            local.spec
+                .split("•")
+                .map(item => item.trim());
 
 
-            const pickupTime =
-                document.getElementById("pickupTime").value;
+        vehicle = {
+
+            id: Number(vehicleId),
+
+            brand: parts[0],
+
+            model:
+                parts.slice(1).join(" "),
+
+            price_per_day:
+                local.price,
+
+            fuel_type:
+                specs.find(item =>
+                    /petrol|diesel|electric|hybrid/i
+                    .test(item)
+                ) || "N/A",
+
+            transmission:
+                specs.find(item =>
+                    /automatic|manual/i
+                    .test(item)
+                ) || "N/A",
+
+            seats:
+                (
+                    local.spec.match(
+                        /(\d+)\s*Seats/i
+                    ) || [, ""]
+                )[1],
+
+            location:
+                "Mumbai"
+
+        };
+
+    }
 
 
-            const returnTime =
-                document.getElementById("returnTime").value;
+    /*
+        If nothing is found
+    */
+
+    if (!vehicle && !local) {
+
+        document.getElementById("vehicleName").textContent =
+            "Vehicle Not Found";
+
+        document.getElementById("vehicleDescription").textContent =
+            "This vehicle could not be found.";
+
+        return;
+
+    }
 
 
-            const pickupLocation =
-                document.getElementById("pickupLocation").value;
+    /*
+        Vehicle name
+    */
+
+    const displayName =
+        vehicle
+            ? `${vehicle.brand || ""} ${vehicle.model || ""}`.trim()
+            : local.name;
 
 
-            const returnLocation =
-                document.getElementById("returnLocation").value;
+    document.getElementById("vehicleName").textContent =
+        displayName;
 
 
-            /*
-                Validate dates
-            */
+    /*
+        Price
+    */
 
-            if (ret < pickup) {
-
-                alert(
-                    "Return date cannot be before pickup date."
-                );
-
-                return;
-
-            }
+    const price =
+        Number(
+            vehicle?.price_per_day ||
+            local?.price ||
+            0
+        );
 
 
-            /*
-                Go to availability page
-            */
+    document.getElementById("vehiclePrice").textContent =
 
-            window.location.href =
-                `availability.html?id=${vehicleId}` +
-                `&pickup=${encodeURIComponent(pickup)}` +
-                `&return=${encodeURIComponent(ret)}` +
-                `&pickupTime=${encodeURIComponent(pickupTime)}` +
-                `&returnTime=${encodeURIComponent(returnTime)}` +
-                `&pickupLocation=${encodeURIComponent(pickupLocation)}` +
-                `&returnLocation=${encodeURIComponent(returnLocation)}`;
+        `₹${price.toLocaleString("en-IN")} / Day`;
 
-        });
+
+    /*
+        Fuel
+    */
+
+    document.getElementById("fuelType").textContent =
+
+        vehicle?.fuel_type ||
+        local?.spec ||
+        "N/A";
+
+
+    /*
+        Transmission
+    */
+
+    document.getElementById("transmission").textContent =
+
+        vehicle?.transmission ||
+        "N/A";
+
+
+    /*
+        Seats
+    */
+
+    document.getElementById("seats").textContent =
+
+        vehicle?.seats
+            ? `${vehicle.seats} Seats`
+            : "N/A";
+
+
+    /*
+        Location
+    */
+
+    document.getElementById("location").textContent =
+
+        vehicle?.location ||
+        "Mumbai";
+
+
+    /*
+        Description
+    */
+
+    document.getElementById("vehicleDescription").textContent =
+
+        `${displayName} is available for rent in excellent condition.`;
+
+
+    /*
+        IMAGE FIX
+
+        Always use the same local image
+        that is already present on vehicles.html.
+
+        This avoids broken database image_url.
+    */
+
+    const vehicleImage =
+        document.getElementById("vehicleImage");
+
+
+    if (local && local.image) {
+
+        vehicleImage.src =
+            local.image;
+
+    }
+
+    else if (vehicle?.image_url) {
+
+        vehicleImage.src =
+            vehicle.image_url;
+
+    }
+
+
+    vehicleImage.alt =
+        displayName;
+
+
+    /*
+        Book Now button
+    */
+
+    const bookBtn =
+        document.getElementById("bookBtn");
+
+
+    if (bookBtn) {
+
+        bookBtn.href =
+            `booking.html?id=${vehicleId}`;
+
+    }
 
 });
-
 
 </script>
 
 
 <script src="../assets/js/script.js"></script>
-
 
 </body>
 
