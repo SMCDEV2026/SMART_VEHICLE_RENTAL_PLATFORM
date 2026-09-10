@@ -4,158 +4,750 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Booking Summary | DriveZone</title>
 
-<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet"
+href="../assets/css/style.css">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 </head>
 
-<!-- YAHAN SCRIPT PASTE KARO -->
-
-<script>
-
-const API = "https://smart-vehicle-rental-platform-1.onrender.com/api";
-const params = new URLSearchParams(window.location.search);
-
-const vehicleId = params.get("id");
-const pickup = params.get("pickup");
-const ret = params.get("return");
-
-async function loadSummary(){
-
-    const res = await fetch(`${API}/vehicles/${vehicleId}`);
-    const vehicle = await res.json();
-
-    document.getElementById("vehicleName").innerHTML =
-        vehicle.brand + " " + vehicle.model;
-
-    document.getElementById("pickupDate").innerHTML = pickup;
-    document.getElementById("returnDate").innerHTML = ret;
-
-    const d1 = new Date(pickup);
-    const d2 = new Date(ret);
-
-    const days = Math.ceil((d2-d1)/(1000*60*60*24));
-
-    document.getElementById("totalDays").innerHTML = days;
-
-    const rent = days * vehicle.price_per_day;
-    const deposit = vehicle.security_deposit;
-    const gst = rent * 0.18;
-    const discount = 0;
-
-    const total = rent + deposit + gst - discount;
-
-    document.getElementById("rent").innerHTML =
-        "₹" + rent.toLocaleString();
-
-    document.getElementById("deposit").innerHTML =
-        "₹" + deposit.toLocaleString();
-
-    document.getElementById("gst").innerHTML =
-        "₹" + gst.toLocaleString();
-
-    document.getElementById("discount").innerHTML =
-        "- ₹" + discount.toLocaleString();
-
-    document.getElementById("total").innerHTML =
-        "₹" + total.toLocaleString();
-
-    document.getElementById("payBtn").href =
-        `payment.html?id=${vehicleId}&pickup=${pickup}&return=${ret}`;
-}
-
-loadSummary();
-
-
-
-</script>
 
 <body>
 
 <header>
 
 <div class="logo">
-<h2> DriveZone</h2>
+
+<h2>DriveZone</h2>
+
 </div>
+
 
 <nav>
 
 <a href="../index.html">Home</a>
+
 <a href="vehicles.html">Vehicles</a>
+
 <a href="my-bookings.html">My Bookings</a>
 
 </nav>
 
 </header>
 
+
 <section class="summary-section">
 
 <div class="summary-card">
 
+
 <h1>Booking Summary</h1>
+
 
 <table class="summary-table">
 
+
 <tr>
+
 <td>Vehicle</td>
-<td><strong id="vehicleName">Loading...</strong></td>
+
+<td>
+<strong id="vehicleName">
+Loading...
+</strong>
+</td>
+
 </tr>
 
+
 <tr>
+
 <td>Pickup Date</td>
-<td id="pickupDate">Loading...</td>
+
+<td id="pickupDate">
+Loading...
+</td>
+
 </tr>
 
+
 <tr>
+
 <td>Return Date</td>
-<td id="returnDate">Loading...</td>
+
+<td id="returnDate">
+Loading...
+</td>
+
 </tr>
 
+
 <tr>
+
 <td>Total Days</td>
-<td id="totalDays">Loading...</td>
+
+<td id="totalDays">
+Loading...
+</td>
+
 </tr>
 
+
 <tr>
+
 <td>Rental Charges</td>
-<td id="rent">Loading...</td>
+
+<td id="rent">
+Loading...
+</td>
+
 </tr>
 
+
 <tr>
+
 <td>Security Deposit</td>
-<td id="deposit">Loading...</td>
+
+<td id="deposit">
+Loading...
+</td>
+
 </tr>
 
+
 <tr>
+
 <td>GST (18%)</td>
-<td id="gst">Loading...</td>
+
+<td id="gst">
+Loading...
+</td>
+
 </tr>
 
+
 <tr>
+
 <td>Discount</td>
-<td id="discount" style="color:green;">₹0</td>
+
+<td id="discount"
+style="color:green;">
+₹0
+</td>
+
 </tr>
+
 
 <tr class="total-row">
+
 <td>Total Payable</td>
-<td id="total">Loading...</td>
+
+<td id="total">
+Loading...
+</td>
+
 </tr>
+
 
 </table>
 
-<a id="payBtn" href="#" class="btn">
-    Proceed to Payment
+
+<a id="payBtn"
+href="#"
+class="btn">
+
+Proceed to Payment
+
 </a>
+
 
 </div>
 
 </section>
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+    const API =
+        "https://smart-vehicle-rental-platform-1.onrender.com/api";
+
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const vehicleId =
+        params.get("id");
+
+
+    const pickup =
+        params.get("pickup");
+
+
+    const ret =
+        params.get("return");
+
+
+    const pickupTime =
+        params.get("pickupTime") || "";
+
+
+    const returnTime =
+        params.get("returnTime") || "";
+
+
+    const pickupLocation =
+        params.get("pickupLocation") || "";
+
+
+    const returnLocation =
+        params.get("returnLocation") || "";
+
+
+    const vehicleNameEl =
+        document.getElementById(
+            "vehicleName"
+        );
+
+
+    const pickupEl =
+        document.getElementById(
+            "pickupDate"
+        );
+
+
+    const returnEl =
+        document.getElementById(
+            "returnDate"
+        );
+
+
+    const daysEl =
+        document.getElementById(
+            "totalDays"
+        );
+
+
+    const rentEl =
+        document.getElementById(
+            "rent"
+        );
+
+
+    const depositEl =
+        document.getElementById(
+            "deposit"
+        );
+
+
+    const gstEl =
+        document.getElementById(
+            "gst"
+        );
+
+
+    const totalEl =
+        document.getElementById(
+            "total"
+        );
+
+
+    const discountEl =
+        document.getElementById(
+            "discount"
+        );
+
+
+    const payBtn =
+        document.getElementById(
+            "payBtn"
+        );
+
+
+    /*
+        LOCAL DATA
+    */
+
+    const localVehicles = {
+
+        "1": {
+            name: "Mahindra Scorpio N",
+            price: 4200,
+            deposit: 10000
+        },
+
+        "3": {
+            name: "Kia Seltos",
+            price: 2700,
+            deposit: 10000
+        },
+
+        "4": {
+            name: "Hyundai Verna",
+            price: 2300,
+            deposit: 10000
+        },
+
+        "5": {
+            name: "Honda City",
+            price: 2200,
+            deposit: 10000
+        },
+
+        "6": {
+            name: "Tata Harrier",
+            price: 3300,
+            deposit: 10000
+        },
+
+        "7": {
+            name: "Mahindra XUV700",
+            price: 4500,
+            deposit: 10000
+        },
+
+        "8": {
+            name: "MG Hector",
+            price: 3000,
+            deposit: 10000
+        },
+
+        "9": {
+            name: "Toyota Innova Hycross",
+            price: 5200,
+            deposit: 10000
+        },
+
+        "10": {
+            name: "BMW X1",
+            price: 8500,
+            deposit: 20000
+        },
+
+        "11": {
+            name: "Audi A4",
+            price: 9000,
+            deposit: 20000
+        },
+
+        "12": {
+            name: "Mercedes C-Class",
+            price: 10000,
+            deposit: 20000
+        },
+
+        "13": {
+            name: "Tata Nexon EV",
+            price: 2800,
+            deposit: 10000
+        },
+
+        "14": {
+            name: "Royal Enfield Hunter 350",
+            price: 850,
+            deposit: 5000
+        },
+
+        "15": {
+            name: "KTM Duke 390",
+            price: 1200,
+            deposit: 5000
+        },
+
+        "16": {
+            name: "TVS Apache RTR 310",
+            price: 950,
+            deposit: 5000
+        },
+
+        "17": {
+            name: "Honda CB350",
+            price: 900,
+            deposit: 5000
+        },
+
+        "18": {
+            name: "Hero XPulse 200",
+            price: 750,
+            deposit: 5000
+        },
+
+        "19": {
+            name: "Honda Activa 6G",
+            price: 400,
+            deposit: 5000
+        },
+
+        "20": {
+            name: "Ola S1 Pro",
+            price: 650,
+            deposit: 5000
+        },
+
+        "21": {
+            name: "MG ZS EV",
+            price: 3500,
+            deposit: 10000
+        },
+
+        "22": {
+            name: "Hyundai Ioniq 5",
+            price: 4800,
+            deposit: 10000
+        },
+
+        "23": {
+            name: "Land Rover Defender",
+            price: 15000,
+            deposit: 20000
+        },
+
+        "24": {
+            name: "Ford Mustang",
+            price: 18000,
+            deposit: 20000
+        },
+
+        "25": {
+            name: "Volkswagen Virtus",
+            price: 2600,
+            deposit: 10000
+        }
+
+    };
+
+
+    const local =
+        localVehicles[vehicleId];
+
+
+    let price =
+        local
+            ? local.price
+            : 0;
+
+
+    let deposit =
+        local
+            ? local.deposit
+            : 0;
+
+
+    let vehicleName =
+        local
+            ? local.name
+            : "Selected Vehicle";
+
+
+    /*
+        DISPLAY DATES
+    */
+
+    pickupEl.textContent =
+        pickup || "Not selected";
+
+
+    returnEl.textContent =
+        ret || "Not selected";
+
+
+    /*
+        CALCULATE DAYS
+    */
+
+    let days = 0;
+
+
+    if (pickup && ret) {
+
+        const start =
+            new Date(
+                pickup + "T00:00:00"
+            );
+
+
+        const end =
+            new Date(
+                ret + "T00:00:00"
+            );
+
+
+        const difference =
+            end - start;
+
+
+        if (difference >= 0) {
+
+            days =
+                Math.max(
+                    1,
+                    Math.ceil(
+                        difference /
+                        86400000
+                    )
+                );
+
+        }
+
+    }
+
+
+    vehicleNameEl.textContent =
+        vehicleName;
+
+
+    daysEl.textContent =
+        days > 0
+            ? days
+            : "Invalid dates";
+
+
+    /*
+        FUNCTION TO CALCULATE TOTAL
+    */
+
+    function calculateTotal() {
+
+
+        if (
+            days <= 0 ||
+            price <= 0
+        ) {
+
+            rentEl.textContent =
+                "Unable to calculate";
+
+
+            depositEl.textContent =
+                "Unable to calculate";
+
+
+            gstEl.textContent =
+                "Unable to calculate";
+
+
+            totalEl.textContent =
+                "Unable to calculate";
+
+
+            return;
+
+        }
+
+
+        const rent =
+            days * price;
+
+
+        const gst =
+            rent * 0.18;
+
+
+        const discount =
+            0;
+
+
+        const total =
+            rent +
+            deposit +
+            gst -
+            discount;
+
+
+        rentEl.textContent =
+            "₹" +
+            rent.toLocaleString(
+                "en-IN"
+            );
+
+
+        depositEl.textContent =
+            "₹" +
+            deposit.toLocaleString(
+                "en-IN"
+            );
+
+
+        gstEl.textContent =
+            "₹" +
+            gst.toLocaleString(
+                "en-IN"
+            );
+
+
+        discountEl.textContent =
+            "- ₹" +
+            discount.toLocaleString(
+                "en-IN"
+            );
+
+
+        totalEl.textContent =
+            "₹" +
+            total.toLocaleString(
+                "en-IN"
+            );
+
+    }
+
+
+    /*
+        CALCULATE IMMEDIATELY
+    */
+
+    calculateTotal();
+
+
+    /*
+        GET BACKEND DATA
+    */
+
+    if (vehicleId) {
+
+        fetch(
+            `${API}/vehicles/${encodeURIComponent(vehicleId)}`
+        )
+
+        .then(response => {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "API Error " +
+                    response.status
+                );
+
+            }
+
+            return response.json();
+
+        })
+
+        .then(vehicle => {
+
+
+            const brand =
+                vehicle.brand || "";
+
+
+            const model =
+                vehicle.model || "";
+
+
+            const backendName =
+                `${brand} ${model}`.trim();
+
+
+            if (backendName) {
+
+                vehicleName =
+                    backendName;
+
+            }
+
+
+            const backendPrice =
+                Number(
+                    vehicle.price_per_day
+                );
+
+
+            const backendDeposit =
+                Number(
+                    vehicle.security_deposit
+                );
+
+
+            if (backendPrice > 0) {
+
+                price =
+                    backendPrice;
+
+            }
+
+
+            if (backendDeposit > 0) {
+
+                deposit =
+                    backendDeposit;
+
+            }
+
+
+            vehicleNameEl.textContent =
+                vehicleName;
+
+
+            calculateTotal();
+
+        })
+
+        .catch(error => {
+
+            console.warn(
+                "Backend unavailable. Local data used.",
+                error
+            );
+
+        });
+
+    }
+
+
+    /*
+        PAYMENT BUTTON
+    */
+
+    if (
+        vehicleId &&
+        pickup &&
+        ret &&
+        days > 0
+    ) {
+
+        payBtn.href =
+            "payment.html" +
+            "?id=" +
+            encodeURIComponent(vehicleId) +
+            "&pickup=" +
+            encodeURIComponent(pickup) +
+            "&return=" +
+            encodeURIComponent(ret) +
+            "&pickupTime=" +
+            encodeURIComponent(pickupTime) +
+            "&returnTime=" +
+            encodeURIComponent(returnTime) +
+            "&pickupLocation=" +
+            encodeURIComponent(pickupLocation) +
+            "&returnLocation=" +
+            encodeURIComponent(returnLocation);
+
+    } else {
+
+        payBtn.href =
+            "#";
+
+    }
+
+
+});
+
+</script>
+
 
 <script src="../assets/js/script.js"></script>
 
