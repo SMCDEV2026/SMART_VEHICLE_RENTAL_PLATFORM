@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
     <meta charset="UTF-8">
@@ -180,12 +179,9 @@
 </header>
 
 
-
 <section class="payment-section">
 
-
     <div class="payment-container">
-
 
         <h1>
             Payment
@@ -196,10 +192,7 @@
         </p>
 
 
-
-        <!-- =========================================
-             TOTAL PAYABLE
-        ========================================== -->
+        <!-- TOTAL PAYABLE -->
 
         <div class="amount-box">
 
@@ -214,80 +207,55 @@
         </div>
 
 
-
         <form id="paymentForm">
 
 
-
-            <!-- =====================================
-                 PAYMENT METHODS
-            ====================================== -->
+            <!-- PAYMENT METHODS -->
 
             <div class="payment-method">
 
-
                 <label>
-
                     <input
                         type="radio"
                         name="payment"
                         value="card"
                         checked>
-
                     💳 Credit / Debit Card
-
                 </label>
 
 
-
                 <label>
-
                     <input
                         type="radio"
                         name="payment"
                         value="upi">
-
                     📱 UPI
-
                 </label>
 
 
-
                 <label>
-
                     <input
                         type="radio"
                         name="payment"
                         value="netbanking">
-
                     🏦 Net Banking
-
                 </label>
 
 
-
                 <label>
-
                     <input
                         type="radio"
                         name="payment"
                         value="cash">
-
                     💵 Cash On Pickup
-
                 </label>
-
 
             </div>
 
 
-
-            <!-- =====================================
-                 COUPON
-            ====================================== -->
+            <!-- COUPON -->
 
             <div class="coupon-box">
-
 
                 <label for="couponCode">
 
@@ -298,9 +266,7 @@
                 </label>
 
 
-
                 <div class="coupon-row">
-
 
                     <input
                         type="text"
@@ -309,25 +275,18 @@
                         autocomplete="off">
 
 
-
                     <button
                         type="button"
-                        id="applyCouponBtn"
-                        onclick="applyCoupon()">
+                        id="applyCouponBtn">
 
                         Apply
 
                     </button>
 
-
                 </div>
 
 
-
-                <div
-                    id="couponMessage">
-                </div>
-
+                <div id="couponMessage"></div>
 
 
                 <div class="available-coupons">
@@ -351,46 +310,34 @@
 
                 </div>
 
-
             </div>
 
 
-
-            <!-- =====================================
-                 PRICE SUMMARY
-            ====================================== -->
+            <!-- PRICE SUMMARY -->
 
             <div class="price-summary">
 
-
                 <div class="price-row">
-
 
                     <span>
                         Original Amount
                     </span>
 
-
                     <strong id="originalAmount">
                         ₹0
                     </strong>
 
-
                 </div>
-
 
 
                 <div
                     class="price-row discount"
                     id="discountRow"
-                    style="display: none;">
-
+                    style="display:none;">
 
                     <span>
 
-
                         Coupon Discount
-
 
                         <span
                             class="discount-badge"
@@ -400,47 +347,31 @@
 
                         </span>
 
-
                     </span>
 
-
-
                     <strong id="discountAmount">
-
                         - ₹0
-
                     </strong>
-
 
                 </div>
 
 
-
                 <div class="price-row final">
-
 
                     <span>
                         Final Payable
                     </span>
 
-
                     <strong id="finalAmount">
-
                         ₹0
-
                     </strong>
 
-
                 </div>
-
 
             </div>
 
 
-
-            <!-- =====================================
-                 PAY BUTTON
-            ====================================== -->
+            <!-- PAY BUTTON -->
 
             <button
                 type="submit"
@@ -454,311 +385,589 @@
 
         </form>
 
-
     </div>
-
 
 </section>
 
 
-
 <script>
 
+document.addEventListener("DOMContentLoaded", function () {
 
-// =====================================================
-// API
-// =====================================================
+    /* =====================================================
+       API
+    ===================================================== */
 
-const API =
-    "https://smart-vehicle-rental-platform-1.onrender.com/api";
-
-
-
-// =====================================================
-// URL PARAMETERS
-// =====================================================
-
-const params =
-    new URLSearchParams(
-        window.location.search
-    );
+    const API =
+        "https://smart-vehicle-rental-platform-1.onrender.com/api";
 
 
-const vehicleId =
-    params.get("id");
+    /* =====================================================
+       URL PARAMETERS
+    ===================================================== */
+
+    const params =
+        new URLSearchParams(window.location.search);
+
+    const vehicleId =
+        params.get("id");
+
+    const pickup =
+        params.get("pickup");
+
+    const returnDate =
+        params.get("return");
 
 
-const pickup =
-    params.get("pickup");
+    /*
+       Booking Summary can send total directly.
+       This is our fallback if Render/API is unavailable.
+    */
+
+    const passedTotal =
+        Number(params.get("total")) || 0;
+
+    const passedOriginal =
+        Number(params.get("original")) || 0;
+
+    const passedDiscount =
+        Number(params.get("discount")) || 0;
+
+    const passedCoupon =
+        params.get("coupon") || "";
 
 
-const ret =
-    params.get("return");
+    /* =====================================================
+       PAYMENT VARIABLES
+    ===================================================== */
+
+    let originalTotal =
+        passedOriginal > 0
+            ? passedOriginal
+            : passedTotal;
+
+    let couponDiscount =
+        passedDiscount > 0
+            ? passedDiscount
+            : 0;
+
+    let finalPayable =
+        passedTotal > 0
+            ? passedTotal
+            : originalTotal;
+
+    let couponApplied =
+        passedDiscount > 0;
+
+    let appliedCouponCode =
+        passedCoupon;
 
 
+    /* =====================================================
+       COUPONS
+    ===================================================== */
 
-// =====================================================
-// PAYMENT VARIABLES
-// =====================================================
+    const coupons = {
 
-let originalTotal = 0;
+        NEW25: 4000,
 
-let couponDiscount = 0;
+        LOYALTY: 5000,
 
-let finalPayable = 0;
+        DRIVEZONE30: 3000
 
-let couponApplied = false;
-
-let appliedCouponCode = "";
-
+    };
 
 
-// =====================================================
-// COUPON LIST
-// =====================================================
+    /* =====================================================
+       HTML ELEMENTS
+    ===================================================== */
 
-const coupons = {
+    const totalAmountEl =
+        document.getElementById("totalAmount");
 
-    NEW25: 4000,
+    const originalAmountEl =
+        document.getElementById("originalAmount");
 
-    LOYALTY: 5000,
+    const discountAmountEl =
+        document.getElementById("discountAmount");
 
-    DRIVEZONE30: 3000
+    const finalAmountEl =
+        document.getElementById("finalAmount");
 
-};
+    const discountRow =
+        document.getElementById("discountRow");
+
+    const discountBadge =
+        document.getElementById("discountBadge");
+
+    const couponCodeEl =
+        document.getElementById("couponCode");
+
+    const couponMessageEl =
+        document.getElementById("couponMessage");
+
+    const applyCouponBtn =
+        document.getElementById("applyCouponBtn");
+
+    const paymentForm =
+        document.getElementById("paymentForm");
+
+    const payNowBtn =
+        document.getElementById("payNowBtn");
 
 
+    /* =====================================================
+       MONEY FORMAT
+    ===================================================== */
 
-// =====================================================
-// LOAD PAYMENT
-// =====================================================
+    function formatMoney(amount) {
 
-async function loadPayment() {
+        return "₹" +
+            Math.round(amount)
+                .toLocaleString("en-IN");
 
-    try {
+    }
 
+
+    /* =====================================================
+       UPDATE UI
+    ===================================================== */
+
+    function updatePaymentUI() {
+
+        finalPayable =
+            Math.max(
+                0,
+                originalTotal - couponDiscount
+            );
+
+
+        originalAmountEl.textContent =
+            formatMoney(originalTotal);
+
+
+        discountAmountEl.textContent =
+            "- " +
+            formatMoney(couponDiscount);
+
+
+        finalAmountEl.textContent =
+            formatMoney(finalPayable);
+
+
+        totalAmountEl.textContent =
+            formatMoney(finalPayable);
+
+
+        if (couponDiscount > 0) {
+
+            discountRow.style.display =
+                "flex";
+
+            discountBadge.textContent =
+                appliedCouponCode || "COUPON";
+
+        }
+        else {
+
+            discountRow.style.display =
+                "none";
+
+        }
+
+    }
+
+
+    /* =====================================================
+       LOAD PAYMENT AMOUNT
+    ===================================================== */
+
+    async function loadPayment() {
+
+        /*
+           If Booking Summary already supplied a total,
+           display it immediately.
+        */
+
+        if (passedTotal > 0) {
+
+            originalTotal =
+                passedOriginal > 0
+                    ? passedOriginal
+                    : passedTotal;
+
+            couponDiscount =
+                passedDiscount;
+
+            finalPayable =
+                passedTotal;
+
+            updatePaymentUI();
+
+        }
+
+
+        /*
+           If booking information is missing,
+           don't break the page.
+        */
 
         if (
             !vehicleId ||
             !pickup ||
-            !ret
+            !returnDate
         ) {
 
-            document.getElementById(
-                "totalAmount"
-            ).textContent =
-                "Invalid Booking";
+            if (passedTotal <= 0) {
+
+                totalAmountEl.textContent =
+                    "Invalid Booking";
+
+            }
 
             return;
 
         }
 
 
+        /* =================================================
+           FETCH VEHICLE
+        ================================================= */
 
-        // Get vehicle
+        try {
 
-        const res =
-            await fetch(
-                `${API}/vehicles/${vehicleId}`
+            const controller =
+                new AbortController();
+
+            const timeout =
+                setTimeout(
+                    function () {
+                        controller.abort();
+                    },
+                    8000
+                );
+
+
+            let response;
+
+            try {
+
+                response =
+                    await fetch(
+                        API +
+                        "/vehicles/" +
+                        encodeURIComponent(vehicleId),
+                        {
+                            signal:
+                                controller.signal
+                        }
+                    );
+
+            }
+            finally {
+
+                clearTimeout(timeout);
+
+            }
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Vehicle API returned " +
+                    response.status
+                );
+
+            }
+
+
+            const vehicle =
+                await response.json();
+
+
+            /* =================================================
+               VEHICLE PRICE
+            ================================================= */
+
+            const pricePerDay =
+                Number(
+                    vehicle.price_per_day
+                );
+
+            const securityDeposit =
+                Number(
+                    vehicle.security_deposit
+                ) || 0;
+
+
+            if (
+                !Number.isFinite(pricePerDay) ||
+                pricePerDay <= 0
+            ) {
+
+                throw new Error(
+                    "Invalid vehicle price"
+                );
+
+            }
+
+
+            /* =================================================
+               DATE CALCULATION
+            ================================================= */
+
+            const startDate =
+                new Date(
+                    pickup + "T00:00:00"
+                );
+
+            const endDate =
+                new Date(
+                    returnDate + "T00:00:00"
+                );
+
+
+            if (
+                Number.isNaN(
+                    startDate.getTime()
+                ) ||
+                Number.isNaN(
+                    endDate.getTime()
+                ) ||
+                endDate < startDate
+            ) {
+
+                throw new Error(
+                    "Invalid booking dates"
+                );
+
+            }
+
+
+            const oneDay =
+                24 * 60 * 60 * 1000;
+
+
+            const days =
+                Math.max(
+                    1,
+                    Math.ceil(
+                        (
+                            endDate.getTime() -
+                            startDate.getTime()
+                        ) / oneDay
+                    )
+                );
+
+
+            /* =================================================
+               RENT
+            ================================================= */
+
+            const rentalCharge =
+                days * pricePerDay;
+
+
+            /* =================================================
+               GST 18%
+            ================================================= */
+
+            const gst =
+                Math.round(
+                    rentalCharge * 0.18
+                );
+
+
+            /* =================================================
+               ORIGINAL TOTAL
+               Rent + Deposit + GST
+            ================================================= */
+
+            const calculatedTotal =
+                Math.round(
+                    rentalCharge +
+                    securityDeposit +
+                    gst
+                );
+
+
+            /*
+               If Booking Summary supplied a total,
+               keep that amount so both pages stay consistent.
+
+               Otherwise use the backend calculation.
+            */
+
+            if (passedTotal <= 0) {
+
+                originalTotal =
+                    calculatedTotal;
+
+                couponDiscount = 0;
+
+                couponApplied = false;
+
+                appliedCouponCode = "";
+
+                finalPayable =
+                    originalTotal;
+
+                updatePaymentUI();
+
+            }
+
+            console.log(
+                "Payment data loaded:",
+                {
+                    vehicleId,
+                    pricePerDay,
+                    securityDeposit,
+                    days,
+                    rentalCharge,
+                    gst,
+                    calculatedTotal,
+                    originalTotal,
+                    couponDiscount,
+                    finalPayable
+                }
+            );
+
+        }
+        catch (error) {
+
+            console.error(
+                "Payment loading error:",
+                error
             );
 
 
+            /*
+               If total came from Booking Summary,
+               continue using that total.
+            */
 
-        if (!res.ok) {
+            if (passedTotal > 0) {
 
-            throw new Error(
-                "Vehicle not found"
-            );
+                originalTotal =
+                    passedOriginal > 0
+                        ? passedOriginal
+                        : passedTotal;
+
+                couponDiscount =
+                    passedDiscount;
+
+                finalPayable =
+                    Math.max(
+                        0,
+                        originalTotal -
+                        couponDiscount
+                    );
+
+                updatePaymentUI();
+
+                totalAmountEl.title =
+                    "Amount loaded from Booking Summary.";
+
+            }
+            else {
+
+                totalAmountEl.textContent =
+                    "Unable to load amount";
+
+            }
+
+        }
+
+    }
+
+
+    /* =====================================================
+       APPLY COUPON
+    ===================================================== */
+
+    function applyCoupon() {
+
+        const code =
+            couponCodeEl.value
+                .trim()
+                .toUpperCase();
+
+
+        /* EMPTY */
+
+        if (!code) {
+
+            couponMessageEl.className =
+                "coupon-error";
+
+            couponMessageEl.textContent =
+                "Please enter a coupon code.";
+
+            return;
 
         }
 
 
+        /* AMOUNT NOT READY */
 
-        const vehicle =
-            await res.json();
+        if (originalTotal <= 0) {
 
+            couponMessageEl.className =
+                "coupon-error";
 
+            couponMessageEl.textContent =
+                "Please wait for the amount to load.";
 
-        // Dates
+            return;
 
-        const d1 =
-            new Date(pickup);
+        }
 
 
-        const d2 =
-            new Date(ret);
+        /* INVALID COUPON */
 
+        if (
+            !Object.prototype.hasOwnProperty.call(
+                coupons,
+                code
+            )
+        ) {
 
+            couponDiscount = 0;
 
-        // Number of days
+            couponApplied = false;
 
-        const days =
-            Math.max(
-                1,
-                Math.ceil(
-                    (d2 - d1) /
-                    (1000 * 60 * 60 * 24)
-                )
-            );
+            appliedCouponCode = "";
 
+            finalPayable =
+                originalTotal;
 
+            couponMessageEl.className =
+                "coupon-error";
 
-        // Rent
+            couponMessageEl.textContent =
+                "✕ Invalid coupon code. Try NEW25, LOYALTY or DRIVEZONE30.";
 
-        const rent =
-            days *
-            Number(
-                vehicle.price_per_day
-            );
+            updatePaymentUI();
 
+            return;
 
+        }
 
-        // Security deposit
 
-        const deposit =
-            Number(
-                vehicle.security_deposit || 0
-            );
-
-
-
-        // GST
-
-        const gst =
-            Math.round(
-                rent * 0.18
-            );
-
-
-
-        // Original total
-
-        originalTotal =
-            Math.round(
-                rent +
-                deposit +
-                gst
-            );
-
-
-
-        // Initial final amount
-
-        finalPayable =
-            originalTotal;
-
-
-
-        updatePaymentUI();
-
-
-    }
-    catch (error) {
-
-
-        console.error(
-            "Payment loading error:",
-            error
-        );
-
-
-        document.getElementById(
-            "totalAmount"
-        ).textContent =
-            "Unable to load amount";
-
-
-    }
-
-}
-
-
-
-// =====================================================
-// APPLY COUPON
-// =====================================================
-
-function applyCoupon() {
-
-
-    const input =
-        document.getElementById(
-            "couponCode"
-        );
-
-
-    const message =
-        document.getElementById(
-            "couponMessage"
-        );
-
-
-    const button =
-        document.getElementById(
-            "applyCouponBtn"
-        );
-
-
-    const badge =
-        document.getElementById(
-            "discountBadge"
-        );
-
-
-
-    // Get code
-
-    const code =
-        input.value
-            .trim()
-            .toUpperCase();
-
-
-
-    // Empty
-
-    if (!code) {
-
-
-        message.className =
-            "coupon-error";
-
-
-        message.textContent =
-            "Please enter a coupon code.";
-
-
-        return;
-
-    }
-
-
-
-    // =================================================
-    // VALID COUPON
-    // =================================================
-
-    if (
-        Object.prototype.hasOwnProperty.call(
-            coupons,
-            code
-        )
-    ) {
-
-
-        const discountValue =
-            coupons[code];
-
-
-
-        // Don't allow discount above total
+        /* APPLY DISCOUNT */
 
         couponDiscount =
             Math.min(
-                discountValue,
+                coupons[code],
                 originalTotal
             );
 
+
+        couponApplied =
+            true;
+
+        appliedCouponCode =
+            code;
 
 
         finalPayable =
@@ -769,210 +978,61 @@ function applyCoupon() {
             );
 
 
-
-        couponApplied =
-            true;
-
-
-        appliedCouponCode =
-            code;
-
-
-
-        // Success message
-
-        message.className =
+        couponMessageEl.className =
             "coupon-success";
 
+        couponMessageEl.textContent =
+            "✓ Coupon " +
+            code +
+            " applied successfully! ₹" +
+            couponDiscount.toLocaleString("en-IN") +
+            " discount added.";
 
-        message.textContent =
-            `✓ Coupon ${code} applied successfully! ₹${couponDiscount.toLocaleString("en-IN")} discount added.`;
 
+        couponCodeEl.disabled =
+            true;
 
+        applyCouponBtn.disabled =
+            true;
 
-        // Button
-
-        button.textContent =
+        applyCouponBtn.textContent =
             "Applied";
 
 
-        button.disabled =
-            true;
-
-
-
-        // Input
-
-        input.disabled =
-            true;
-
-
-
-        // Badge
-
-        badge.textContent =
-            code;
-
-
-
-        // Update amount
-
         updatePaymentUI();
 
-
-        return;
-
     }
 
 
+    /* =====================================================
+       COUPON BUTTON
+    ===================================================== */
 
-    // =================================================
-    // INVALID COUPON
-    // =================================================
-
-    couponDiscount =
-        0;
-
-
-    finalPayable =
-        originalTotal;
+    applyCouponBtn.addEventListener(
+        "click",
+        applyCoupon
+    );
 
 
-    couponApplied =
-        false;
+    /* =====================================================
+       PAYMENT FORM
+    ===================================================== */
 
-
-    appliedCouponCode =
-        "";
-
-
-
-    message.className =
-        "coupon-error";
-
-
-    message.textContent =
-        "✕ Invalid coupon code. Try NEW25, LOYALTY or DRIVEZONE30.";
-
-
-
-    updatePaymentUI();
-
-}
-
-
-
-// =====================================================
-// UPDATE PAYMENT UI
-// =====================================================
-
-function updatePaymentUI() {
-
-
-    // Original
-
-    document.getElementById(
-        "originalAmount"
-    ).textContent =
-        "₹" +
-        originalTotal.toLocaleString(
-            "en-IN"
-        );
-
-
-
-    // Top total
-
-    document.getElementById(
-        "totalAmount"
-    ).textContent =
-        "₹" +
-        finalPayable.toLocaleString(
-            "en-IN"
-        );
-
-
-
-    // Discount
-
-    document.getElementById(
-        "discountAmount"
-    ).textContent =
-        "- ₹" +
-        couponDiscount.toLocaleString(
-            "en-IN"
-        );
-
-
-
-    // Final
-
-    document.getElementById(
-        "finalAmount"
-    ).textContent =
-        "₹" +
-        finalPayable.toLocaleString(
-            "en-IN"
-        );
-
-
-
-    // Discount row
-
-    const discountRow =
-        document.getElementById(
-            "discountRow"
-        );
-
-
-
-    if (couponDiscount > 0) {
-
-        discountRow.style.display =
-            "flex";
-
-    }
-    else {
-
-        discountRow.style.display =
-            "none";
-
-    }
-
-}
-
-
-
-// =====================================================
-// PAYMENT SUBMIT
-// =====================================================
-
-document
-    .getElementById("paymentForm")
-    .addEventListener(
+    paymentForm.addEventListener(
         "submit",
-        function (e) {
+        function (event) {
+
+            event.preventDefault();
 
 
-            e.preventDefault();
-
-
-
-            const btn =
-                document.getElementById(
-                    "payNowBtn"
-                );
-
-
-
-            // Safety check
+            /* PAYMENT AMOUNT CHECK */
 
             if (
-                finalPayable < 0
+                finalPayable <= 0
             ) {
 
                 alert(
-                    "Invalid payment amount."
+                    "Payment amount is not available. Please go back and try again."
                 );
 
                 return;
@@ -980,67 +1040,74 @@ document
             }
 
 
+            /* PAYMENT METHOD */
 
-            // Disable button
+            const selectedPayment =
+                document.querySelector(
+                    'input[name="payment"]:checked'
+                );
 
-            btn.disabled =
+
+            const paymentMethod =
+                selectedPayment
+                    ? selectedPayment.value
+                    : "card";
+
+
+            /* DISABLE BUTTON */
+
+            payNowBtn.disabled =
                 true;
 
-
-            btn.textContent =
+            payNowBtn.textContent =
                 "Processing Payment...";
 
 
-
-            // =================================================
-            // PASS ALL PAYMENT DATA TO NEXT PAGE
-            // =================================================
+            /* =================================================
+               SEND DATA TO PROCESSING PAGE
+            ================================================= */
 
             const nextParams =
                 new URLSearchParams();
 
 
-
             nextParams.set(
                 "id",
-                vehicleId
+                vehicleId || ""
             );
-
 
 
             nextParams.set(
                 "pickup",
-                pickup
+                pickup || ""
             );
-
 
 
             nextParams.set(
                 "return",
-                ret
+                returnDate || ""
             );
 
-
-
-            // Original amount
 
             nextParams.set(
                 "original",
-                originalTotal
+                String(
+                    Math.round(
+                        originalTotal
+                    )
+                )
             );
 
-
-
-            // Discount
 
             nextParams.set(
                 "discount",
-                couponDiscount
+                String(
+                    Math.round(
+                        couponDiscount
+                    )
+                )
             );
 
-
-
-            // Selected coupon
 
             nextParams.set(
                 "coupon",
@@ -1050,64 +1117,59 @@ document
             );
 
 
-
-            // FINAL PAYABLE
-
             nextParams.set(
                 "total",
-                finalPayable
+                String(
+                    Math.round(
+                        finalPayable
+                    )
+                )
             );
 
 
-
-            // Payment method
-
-            const selectedPayment =
-                document.querySelector(
-                    'input[name="payment"]:checked'
-                );
+            nextParams.set(
+                "payment",
+                paymentMethod
+            );
 
 
-            if (selectedPayment) {
-
-                nextParams.set(
-                    "payment",
-                    selectedPayment.value
-                );
-
-            }
-
-
-
-            // =================================================
-            // GO TO PROCESSING
-            // =================================================
+            /* =================================================
+               GO TO PROCESSING PAGE
+            ================================================= */
 
             setTimeout(
                 function () {
-
 
                     window.location.href =
                         "processing.html?" +
                         nextParams.toString();
 
-
                 },
-                2000
+                700
             );
-
 
         }
     );
 
 
+    /* =====================================================
+       INITIAL DISPLAY
+    ===================================================== */
 
-// =====================================================
-// START
-// =====================================================
+    if (passedTotal > 0) {
 
-loadPayment();
+        updatePaymentUI();
 
+    }
+
+
+    /* =====================================================
+       START PAYMENT
+    ===================================================== */
+
+    loadPayment();
+
+});
 
 </script>
 
@@ -1116,5 +1178,4 @@ loadPayment();
 
 
 </body>
-
 </html>
