@@ -14,34 +14,13 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 </head>
-<script>
-const API = "https://smart-vehicle-rental-platform-1.onrender.com/api";
 
-const params = new URLSearchParams(window.location.search);
-const vehicleId = params.get("id");
-
-async function loadVehicle() {
-
-    if (!vehicleId) return;
-
-    const res = await fetch(`${API}/vehicles/${vehicleId}`);
-    const vehicle = await res.json();
-
-    document.getElementById("price").innerHTML =
-        `₹${vehicle.price_per_day.toLocaleString()} / Day`;
-
-    document.getElementById("deposit").innerHTML =
-        `₹${vehicle.security_deposit.toLocaleString()}`;    
-}
-
-loadVehicle();
-</script>
 <body>
 
 <header>
 
     <div class="logo">
-        <h2> DriveZone</h2>
+        <h2>DriveZone</h2>
     </div>
 
     <nav>
@@ -54,6 +33,7 @@ loadVehicle();
 
 </header>
 
+
 <section class="booking-section">
 
 <div class="booking-container">
@@ -63,6 +43,7 @@ loadVehicle();
 <p>
 Fill the details below to continue booking.
 </p>
+
 
 <form id="bookingForm">
 
@@ -76,6 +57,7 @@ Fill the details below to continue booking.
 
 </div>
 
+
 <div class="input-box">
 
 <label>Return Date</label>
@@ -84,59 +66,64 @@ Fill the details below to continue booking.
 
 </div>
 
+
 <div class="input-box">
 
 <label>Pickup Time</label>
 
-<input type="time" required>
+<input type="time" id="pickupTime" required>
 
 </div>
+
 
 <div class="input-box">
 
 <label>Return Time</label>
 
-<input type="time" required>
+<input type="time" id="returnTime" required>
 
 </div>
+
 
 <div class="input-box">
 
 <label>Pickup Location</label>
 
-<select required>
+<select id="pickupLocation" required>
 
-<option>Mumbai Airport</option>
+<option value="Mumbai Airport">Mumbai Airport</option>
 
-<option>Thane</option>
+<option value="Thane">Thane</option>
 
-<option>Navi Mumbai</option>
+<option value="Navi Mumbai">Navi Mumbai</option>
 
-<option>Pune</option>
+<option value="Pune">Pune</option>
 
 </select>
 
 </div>
+
 
 <div class="input-box">
 
 <label>Return Location</label>
 
-<select required>
+<select id="returnLocation" required>
 
-<option>Mumbai Airport</option>
+<option value="Mumbai Airport">Mumbai Airport</option>
 
-<option>Thane</option>
+<option value="Thane">Thane</option>
 
-<option>Navi Mumbai</option>
+<option value="Navi Mumbai">Navi Mumbai</option>
 
-<option>Pune</option>
+<option value="Pune">Pune</option>
 
 </select>
 
 </div>
 
 </div>
+
 
 <div class="booking-summary">
 
@@ -153,7 +140,8 @@ Security Deposit :
 
 </div>
 
-<button class="btn">
+
+<button type="submit" class="btn">
 
 Check Availability
 
@@ -164,24 +152,445 @@ Check Availability
 </div>
 
 </section>
+
+
 <script>
 
-document.getElementById("bookingForm").addEventListener("submit", function(e){
+document.addEventListener("DOMContentLoaded", function () {
 
-    e.preventDefault();
+    const API =
+        "https://smart-vehicle-rental-platform-1.onrender.com/api";
 
-    const pickup =
-        document.getElementById("pickupDate").value;
 
-    const ret =
-        document.getElementById("returnDate").value;
+    const params =
+        new URLSearchParams(window.location.search);
 
-    window.location.href =
-    `availability.html?id=${vehicleId}&pickup=${pickup}&return=${ret}`;
+
+    const vehicleId =
+        params.get("id");
+
+
+    const priceEl =
+        document.getElementById("price");
+
+
+    const depositEl =
+        document.getElementById("deposit");
+
+
+    const form =
+        document.getElementById("bookingForm");
+
+
+    const pickupDate =
+        document.getElementById("pickupDate");
+
+
+    const returnDate =
+        document.getElementById("returnDate");
+
+
+    const pickupTime =
+        document.getElementById("pickupTime");
+
+
+    const returnTime =
+        document.getElementById("returnTime");
+
+
+    const pickupLocation =
+        document.getElementById("pickupLocation");
+
+
+    const returnLocation =
+        document.getElementById("returnLocation");
+
+
+    /*
+        LOCAL DATA
+        Used only if backend is temporarily unavailable.
+    */
+
+    const localVehicles = {
+
+        "1": {
+            name: "Mahindra Scorpio N",
+            price: 4200,
+            deposit: 10000
+        },
+
+        "3": {
+            name: "Kia Seltos",
+            price: 2700,
+            deposit: 10000
+        },
+
+        "4": {
+            name: "Hyundai Verna",
+            price: 2300,
+            deposit: 10000
+        },
+
+        "5": {
+            name: "Honda City",
+            price: 2200,
+            deposit: 10000
+        },
+
+        "6": {
+            name: "Tata Harrier",
+            price: 3300,
+            deposit: 10000
+        },
+
+        "7": {
+            name: "Mahindra XUV700",
+            price: 4500,
+            deposit: 10000
+        },
+
+        "8": {
+            name: "MG Hector",
+            price: 3000,
+            deposit: 10000
+        },
+
+        "9": {
+            name: "Toyota Innova Hycross",
+            price: 5200,
+            deposit: 10000
+        },
+
+        "10": {
+            name: "BMW X1",
+            price: 8500,
+            deposit: 20000
+        },
+
+        "11": {
+            name: "Audi A4",
+            price: 9000,
+            deposit: 20000
+        },
+
+        "12": {
+            name: "Mercedes C-Class",
+            price: 10000,
+            deposit: 20000
+        },
+
+        "13": {
+            name: "Tata Nexon EV",
+            price: 2800,
+            deposit: 10000
+        },
+
+        "14": {
+            name: "Royal Enfield Hunter 350",
+            price: 850,
+            deposit: 5000
+        },
+
+        "15": {
+            name: "KTM Duke 390",
+            price: 1200,
+            deposit: 5000
+        },
+
+        "16": {
+            name: "TVS Apache RTR 310",
+            price: 950,
+            deposit: 5000
+        },
+
+        "17": {
+            name: "Honda CB350",
+            price: 900,
+            deposit: 5000
+        },
+
+        "18": {
+            name: "Hero XPulse 200",
+            price: 750,
+            deposit: 5000
+        },
+
+        "19": {
+            name: "Honda Activa 6G",
+            price: 400,
+            deposit: 5000
+        },
+
+        "20": {
+            name: "Ola S1 Pro",
+            price: 650,
+            deposit: 5000
+        },
+
+        "21": {
+            name: "MG ZS EV",
+            price: 3500,
+            deposit: 10000
+        },
+
+        "22": {
+            name: "Hyundai Ioniq 5",
+            price: 4800,
+            deposit: 10000
+        },
+
+        "23": {
+            name: "Land Rover Defender",
+            price: 15000,
+            deposit: 20000
+        },
+
+        "24": {
+            name: "Ford Mustang",
+            price: 18000,
+            deposit: 20000
+        },
+
+        "25": {
+            name: "Volkswagen Virtus",
+            price: 2600,
+            deposit: 10000
+        }
+
+    };
+
+
+    /*
+        VEHICLE ID CHECK
+    */
+
+    if (!vehicleId) {
+
+        priceEl.textContent =
+            "Vehicle not selected";
+
+        depositEl.textContent =
+            "N/A";
+
+        return;
+    }
+
+
+    /*
+        FIRST SHOW LOCAL DATA
+        So Loading... doesn't remain forever.
+    */
+
+    const local =
+        localVehicles[vehicleId];
+
+
+    if (local) {
+
+        priceEl.textContent =
+            "₹" +
+            local.price.toLocaleString("en-IN") +
+            " / Day";
+
+
+        depositEl.textContent =
+            "₹" +
+            local.deposit.toLocaleString("en-IN");
+
+    }
+
+
+    /*
+        THEN GET REAL DATA FROM BACKEND
+    */
+
+    fetch(
+        `${API}/vehicles/${encodeURIComponent(vehicleId)}`
+    )
+
+    .then(response => {
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Vehicle API returned " +
+                response.status
+            );
+
+        }
+
+        return response.json();
+
+    })
+
+    .then(vehicle => {
+
+        const backendPrice =
+            Number(vehicle.price_per_day);
+
+
+        const backendDeposit =
+            Number(vehicle.security_deposit);
+
+
+        if (backendPrice > 0) {
+
+            priceEl.textContent =
+                "₹" +
+                backendPrice.toLocaleString("en-IN") +
+                " / Day";
+
+        }
+
+
+        if (backendDeposit > 0) {
+
+            depositEl.textContent =
+                "₹" +
+                backendDeposit.toLocaleString("en-IN");
+
+        }
+
+    })
+
+    .catch(error => {
+
+        console.warn(
+            "Backend unavailable. Using local data.",
+            error
+        );
+
+    });
+
+
+    /*
+        DATE SETTINGS
+    */
+
+    const today =
+        new Date().toISOString().split("T")[0];
+
+
+    pickupDate.min = today;
+
+    returnDate.min = today;
+
+
+    pickupDate.addEventListener(
+        "change",
+        function () {
+
+            returnDate.min =
+                pickupDate.value || today;
+
+
+            if (
+                returnDate.value &&
+                returnDate.value < pickupDate.value
+            ) {
+
+                returnDate.value =
+                    pickupDate.value;
+
+            }
+
+        }
+    );
+
+
+    /*
+        FORM SUBMISSION
+    */
+
+    form.addEventListener(
+        "submit",
+        function (event) {
+
+            event.preventDefault();
+
+
+            if (!pickupDate.value) {
+
+                alert(
+                    "Please select pickup date."
+                );
+
+                return;
+            }
+
+
+            if (!returnDate.value) {
+
+                alert(
+                    "Please select return date."
+                );
+
+                return;
+            }
+
+
+            if (
+                returnDate.value <
+                pickupDate.value
+            ) {
+
+                alert(
+                    "Return date cannot be before pickup date."
+                );
+
+                return;
+            }
+
+
+            if (!pickupTime.value) {
+
+                alert(
+                    "Please select pickup time."
+                );
+
+                return;
+            }
+
+
+            if (!returnTime.value) {
+
+                alert(
+                    "Please select return time."
+                );
+
+                return;
+            }
+
+
+            const nextPage =
+                "availability.html" +
+                "?id=" +
+                encodeURIComponent(vehicleId) +
+                "&pickup=" +
+                encodeURIComponent(pickupDate.value) +
+                "&return=" +
+                encodeURIComponent(returnDate.value) +
+                "&pickupTime=" +
+                encodeURIComponent(pickupTime.value) +
+                "&returnTime=" +
+                encodeURIComponent(returnTime.value) +
+                "&pickupLocation=" +
+                encodeURIComponent(pickupLocation.value) +
+                "&returnLocation=" +
+                encodeURIComponent(returnLocation.value);
+
+
+            window.location.href =
+                nextPage;
+
+        }
+    );
 
 });
 
 </script>
+
+
 <script src="../assets/js/script.js"></script>
 
 </body>
