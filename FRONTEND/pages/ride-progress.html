@@ -11,7 +11,9 @@
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 </head>
 
@@ -22,7 +24,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 <div class="logo">
 <h2> DriveZone</h2>
 </div>
-         
+
 <nav>
 <a href="../index.html">Home</a>
 <a href="vehicles.html">Vehicles</a>
@@ -30,6 +32,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 </nav>
 
 </header>
+
 
 <section class="ride-section">
 
@@ -42,6 +45,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 <p>
 Enjoy your journey. Drive safely and follow traffic rules.
 </p>
+
 
 <div class="ride-grid">
 
@@ -76,20 +80,23 @@ Enjoy your journey. Drive safely and follow traffic rules.
 </div>
 
 </div>
+
+
 <div class="ride-map">
 
-         <h3>📍 Live Location</h3>
+<h3>📍 Live Location</h3>
 
-         <div id="map" style="
+<div id="map" style="
 height:400px;
 width:100%;
 border-radius:15px;
 overflow:hidden;
 border:2px solid #00c3ff;
 margin-top:15px;">
-         </div>
+</div>
 
 </div>
+
 
 <div class="ride-buttons">
 
@@ -103,43 +110,211 @@ Return Vehicle
 
 </section>
 
+
 <script>
 
-const params = new URLSearchParams(window.location.search);
+document.addEventListener("DOMContentLoaded", function () {
 
-const vehicle = params.get("vehicle");
-const bookingId = params.get("bookingId");
-const pickup = params.get("pickup");
+    const params = new URLSearchParams(window.location.search);
 
-// NEW
-const rent = params.get("rent");
-const deposit = params.get("deposit");
-const gst = params.get("gst");
-const total = params.get("total");
 
-document.getElementById("vehicleName").textContent =
-vehicle || "Vehicle";
+    /* ================================
+       GET BOOKING INFORMATION
+    ================================= */
 
-document.getElementById("bookingId").textContent =
-bookingId || "-";
+    const vehicle =
+        params.get("vehicle") ||
+        params.get("vehicleName") ||
+        "Vehicle";
 
-document.getElementById("rideStarted").textContent =
-pickup ? pickup + " | 10:00 AM" : "-";
+    const bookingId =
+        params.get("bookingId") ||
+        "-";
 
-document.getElementById("returnDate").textContent =
-pickup || "-";
+    const pickup =
+        params.get("pickup") ||
+        "";
 
-document.getElementById("returnBtn").href =
-`return-vehicle.html?vehicle=${encodeURIComponent(vehicle)}&bookingId=${encodeURIComponent(bookingId)}&pickup=${encodeURIComponent(pickup)}&rent=${encodeURIComponent(rent)}&deposit=${encodeURIComponent(deposit)}&gst=${encodeURIComponent(gst)}&total=${encodeURIComponent(total)}`;
+    const returnDate =
+        params.get("return") ||
+        "";
+
+    const location =
+        params.get("location") ||
+        params.get("pickupLocation") ||
+        "Mumbai";
+
+
+    /* ================================
+       PAYMENT INFORMATION
+    ================================= */
+
+    const rent =
+        params.get("rent") ||
+        "0";
+
+    const deposit =
+        params.get("deposit") ||
+        "0";
+
+    const gst =
+        params.get("gst") ||
+        "0";
+
+    const total =
+        params.get("total") ||
+        "0";
+
+    const original =
+        params.get("original") ||
+        "0";
+
+    const discount =
+        params.get("discount") ||
+        "0";
+
+    const coupon =
+        params.get("coupon") ||
+        "";
+
+
+    /* ================================
+       DISPLAY VEHICLE
+    ================================= */
+
+    document.getElementById("vehicleName").textContent =
+        vehicle;
+
+
+    /* ================================
+       DISPLAY BOOKING ID
+    ================================= */
+
+    document.getElementById("bookingId").textContent =
+        bookingId;
+
+
+    /* ================================
+       DISPLAY RIDE STARTED
+    ================================= */
+
+    if (pickup) {
+
+        document.getElementById("rideStarted").textContent =
+            pickup + " | 10:00 AM";
+
+    } else {
+
+        document.getElementById("rideStarted").textContent =
+            "Today | 10:00 AM";
+
+    }
+
+
+    /* ================================
+       DISPLAY RETURN DATE
+    ================================= */
+
+    document.getElementById("returnDate").textContent =
+        returnDate || "Not Selected";
+
+
+    /* ================================
+       RETURN VEHICLE URL
+    ================================= */
+
+    const returnParams = new URLSearchParams();
+
+
+    returnParams.set(
+        "vehicle",
+        vehicle
+    );
+
+    returnParams.set(
+        "vehicleName",
+        vehicle
+    );
+
+    returnParams.set(
+        "bookingId",
+        bookingId
+    );
+
+    returnParams.set(
+        "pickup",
+        pickup
+    );
+
+    returnParams.set(
+        "return",
+        returnDate
+    );
+
+    returnParams.set(
+        "location",
+        location
+    );
+
+    returnParams.set(
+        "pickupLocation",
+        location
+    );
+
+    returnParams.set(
+        "rent",
+        rent
+    );
+
+    returnParams.set(
+        "deposit",
+        deposit
+    );
+
+    returnParams.set(
+        "gst",
+        gst
+    );
+
+    returnParams.set(
+        "total",
+        total
+    );
+
+    returnParams.set(
+        "original",
+        original
+    );
+
+    returnParams.set(
+        "discount",
+        discount
+    );
+
+    returnParams.set(
+        "coupon",
+        coupon
+    );
+
+
+    /* ================================
+       SET RETURN BUTTON
+    ================================= */
+
+    document.getElementById("returnBtn").href =
+        "return-vehicle.html?" +
+        returnParams.toString();
+
+});
 
 </script>
 
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <script src="../assets/js/ride-map.js"></script>
-<script src="../assets/js/script.js"></script>
-<script src="../assets/js/script.js"></script>
 
-
+<script src="../assets/js/script.js"></script>
 
 </body>
 
