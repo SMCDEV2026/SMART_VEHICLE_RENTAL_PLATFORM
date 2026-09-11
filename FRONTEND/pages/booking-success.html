@@ -5,22 +5,51 @@
 
 <meta charset="UTF-8">
 
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
 <title>Booking Confirmed | DriveZone</title>
 
+<link rel="stylesheet"
+      href="../assets/css/style.css">
 
-<link
-rel="stylesheet"
-href="../assets/css/style.css">
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 
-<link
-rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<style>
 
+.success-section {
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.success-card {
+    width: min(900px, 100%);
+}
+
+.booking-details {
+    margin-top: 25px;
+}
+
+.success-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+.success-buttons .btn,
+.success-buttons .btn2 {
+    text-decoration: none;
+    text-align: center;
+}
+
+</style>
 
 </head>
 
@@ -32,7 +61,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <div class="logo">
 
-<h2> DriveZone</h2>
+<h2>DriveZone</h2>
 
 </div>
 
@@ -43,11 +72,9 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 Home
 </a>
 
-
 <a href="vehicles.html">
 Vehicles
 </a>
-
 
 <a href="my-bookings.html">
 My Bookings
@@ -65,8 +92,7 @@ My Bookings
 <div class="success-card">
 
 
-<i
-class="fa-solid fa-circle-check success-big-icon">
+<i class="fa-solid fa-circle-check success-big-icon">
 </i>
 
 
@@ -215,380 +241,723 @@ Back to Home
 
 
 <script>
+document.addEventListener("DOMContentLoaded", async function () {
 
+    const API =
+        "https://smart-vehicle-rental-platform-1.onrender.com/api";
 
-const API =
-"https://smart-vehicle-rental-platform-1.onrender.com/api";
+    const params =
+        new URLSearchParams(window.location.search);
 
+    /* =========================================
+       URL DATA
+    ========================================= */
 
-const params =
-new URLSearchParams(
-window.location.search
-);
+    const vehicleId =
+        params.get("id") ||
+        params.get("vehicleId") ||
+        "";
 
+    const pickup =
+        params.get("pickup") ||
+        "";
 
-const vehicleId =
-params.get("id");
+    const ret =
+        params.get("return") ||
+        "";
 
+    const pickupLocationParam =
+        params.get("pickupLocation") ||
+        params.get("location") ||
+        "";
 
-const pickup =
-params.get("pickup");
+    const returnLocationParam =
+        params.get("returnLocation") ||
+        "";
 
+    const vehicleNameParam =
+        params.get("vehicleName") ||
+        params.get("vehicle") ||
+        "";
 
-const ret =
-params.get("return");
+    const totalFromPayment =
+        Number(params.get("total")) || 0;
 
+    const originalFromPayment =
+        Number(params.get("original")) || 0;
 
-// =====================================================
-// DISCOUNT DATA FROM PAYMENT PAGE
-// =====================================================
+    const discountFromPayment =
+        Number(params.get("discount")) || 0;
 
-const originalFromPayment =
-Number(
-params.get("original")
-);
+    const couponCode =
+        params.get("coupon") || "";
 
+    /* =========================================
+       ELEMENTS
+    ========================================= */
 
-const discountFromPayment =
-Number(
-params.get("discount")
-);
+    const bookingIdEl =
+        document.getElementById("bookingId");
 
+    const vehicleNameEl =
+        document.getElementById("vehicleName");
 
-const totalFromPayment =
-Number(
-params.get("total")
-);
+    const pickupDateEl =
+        document.getElementById("pickupDate");
 
+    const returnDateEl =
+        document.getElementById("returnDate");
 
-const couponCode =
-params.get("coupon") || "";
+    const pickupLocationEl =
+        document.getElementById("pickupLocation");
 
+    const totalPaidEl =
+        document.getElementById("totalPaid");
 
+    const pickupBtn =
+        document.getElementById("pickupBtn");
 
-// =====================================================
-// LOAD SUCCESS PAGE
-// =====================================================
+    /* =========================================
+       BOOKING ID
+    ========================================= */
 
-async function loadSuccess() {
+    let bookingId =
+        params.get("bookingId") || "";
 
-    try {
+    if (!bookingId) {
 
-        if (
-            !vehicleId ||
-            !pickup ||
-            !ret
-        ) {
-
-            throw new Error(
-                "Invalid booking details"
+        bookingId =
+            "SVR" +
+            Math.floor(
+                100000 +
+                Math.random() * 900000
             );
+    }
 
-        }
-
-
-        const res =
-        await fetch(
-            `${API}/vehicles/${vehicleId}`
-        );
-
-
-        if (!res.ok) {
-
-            throw new Error(
-                "Vehicle not found"
-            );
-
-        }
-
-
-        const vehicle =
-        await res.json();
-
-
-        // =================================================
-        // BOOKING ID
-        // =================================================
-
-        const bookingId =
-        "SVR" +
-        Math.floor(
-            100000 +
-            Math.random() * 900000
-        );
-
-
-        // =================================================
-        // VEHICLE NAME
-        // =================================================
-
-        const vehicleName =
-        vehicle.brand +
-        " " +
-        vehicle.model;
-
-
-        // =================================================
-        // BASIC DETAILS
-        // =================================================
-
-        document.getElementById(
-            "bookingId"
-        ).textContent =
+    bookingIdEl.textContent =
         bookingId;
 
+    /* =========================================
+       DATES
+    ========================================= */
 
-        document.getElementById(
-            "vehicleName"
-        ).textContent =
-        vehicleName;
+    pickupDateEl.textContent =
+        pickup || "Not available";
 
+    returnDateEl.textContent =
+        ret || "Not available";
 
-        document.getElementById(
-            "pickupDate"
-        ).textContent =
-        pickup;
+    /* =========================================
+       INITIAL DATA
+    ========================================= */
 
+    vehicleNameEl.textContent =
+        vehicleNameParam ||
+        "Loading...";
 
-        document.getElementById(
-            "returnDate"
-        ).textContent =
-        ret;
+    pickupLocationEl.textContent =
+        pickupLocationParam ||
+        "Loading...";
 
+    /* =========================================
+       VEHICLE FALLBACK DATA
+    ========================================= */
 
-        document.getElementById(
-            "pickupLocation"
-        ).textContent =
-        vehicle.location;
+    const vehicleFallback = {
 
+        "1": {
+            name: "Mahindra Scorpio N",
+            price: 4200,
+            deposit: 10000
+        },
 
+        "3": {
+            name: "Kia Seltos",
+            price: 2700,
+            deposit: 10000
+        },
 
-        // =================================================
-        // CALCULATE ORIGINAL AMOUNT
-        // =================================================
+        "4": {
+            name: "Hyundai Verna",
+            price: 2300,
+            deposit: 10000
+        },
 
-        const d1 =
-        new Date(pickup);
+        "5": {
+            name: "Honda City",
+            price: 2200,
+            deposit: 10000
+        },
 
+        "6": {
+            name: "Tata Harrier",
+            price: 3300,
+            deposit: 10000
+        },
 
-        const d2 =
-        new Date(ret);
+        "7": {
+            name: "Mahindra XUV700",
+            price: 4500,
+            deposit: 10000
+        },
 
+        "8": {
+            name: "MG Hector",
+            price: 3000,
+            deposit: 10000
+        },
 
-        const days =
-        Math.max(
-            1,
-            Math.ceil(
-                (d2 - d1) /
-                (1000 * 60 * 60 * 24)
-            )
-        );
+        "9": {
+            name: "Toyota Innova Hycross",
+            price: 5200,
+            deposit: 10000
+        },
 
+        "10": {
+            name: "BMW X1",
+            price: 8500,
+            deposit: 20000
+        },
 
-        const rent =
-        days *
-        Number(
-            vehicle.price_per_day
-        );
+        "11": {
+            name: "Audi A4",
+            price: 9000,
+            deposit: 20000
+        },
 
+        "12": {
+            name: "Mercedes C-Class",
+            price: 10000,
+            deposit: 20000
+        },
 
-        const deposit =
-        Number(
-            vehicle.security_deposit || 0
-        );
+        "13": {
+            name: "Tata Nexon EV",
+            price: 2800,
+            deposit: 10000
+        },
 
+        "14": {
+            name: "Royal Enfield Hunter 350",
+            price: 850,
+            deposit: 5000
+        },
 
-        const gst =
-        Math.round(
-            rent * 0.18
-        );
+        "15": {
+            name: "KTM Duke 390",
+            price: 1200,
+            deposit: 5000
+        },
 
+        "16": {
+            name: "TVS Apache RTR 310",
+            price: 950,
+            deposit: 5000
+        },
 
-        const calculatedOriginal =
-        Math.round(
-            rent +
-            deposit +
-            gst
-        );
+        "17": {
+            name: "Honda CB350",
+            price: 900,
+            deposit: 5000
+        },
 
+        "18": {
+            name: "Hero XPulse 200",
+            price: 750,
+            deposit: 5000
+        },
 
+        "19": {
+            name: "Honda Activa 6G",
+            price: 400,
+            deposit: 5000
+        },
 
-        // =================================================
-        // FINAL PAYMENT AMOUNT
-        // =================================================
-        //
-        // Priority:
-        //
-        // 1. Amount received from payment page
-        // 2. Original calculated amount
-        //
-        // =================================================
+        "20": {
+            name: "Ola S1 Pro",
+            price: 650,
+            deposit: 5000
+        },
 
-        let originalTotal =
-        calculatedOriginal;
+        "21": {
+            name: "MG ZS EV",
+            price: 3500,
+            deposit: 10000
+        },
 
+        "22": {
+            name: "Hyundai Ioniq 5",
+            price: 4800,
+            deposit: 10000
+        },
 
-        let discount =
-        0;
+        "23": {
+            name: "Land Rover Defender",
+            price: 15000,
+            deposit: 20000
+        },
 
+        "24": {
+            name: "Ford Mustang",
+            price: 18000,
+            deposit: 20000
+        },
 
-        let total =
-        calculatedOriginal;
+        "25": {
+            name: "Volkswagen Virtus",
+            price: 2600,
+            deposit: 10000
+        }
+    };
 
+    /* =========================================
+       FETCH VEHICLE
+    ========================================= */
 
+    let vehicle = null;
 
-        if (
-            Number.isFinite(
-                totalFromPayment
-            ) &&
-            totalFromPayment >= 0
-        ) {
+    if (vehicleId) {
 
-            originalTotal =
-            Number.isFinite(
-                originalFromPayment
-            )
-            &&
-            originalFromPayment > 0
-            ?
-            originalFromPayment
-            :
-            calculatedOriginal;
+        try {
 
+            const controller =
+                new AbortController();
 
-            discount =
-            Number.isFinite(
-                discountFromPayment
-            )
-            ?
-            Math.max(
-                0,
-                discountFromPayment
-            )
-            :
-            0;
+            const timeout =
+                setTimeout(
+                    function () {
+                        controller.abort();
+                    },
+                    8000
+                );
 
+            try {
 
-            total =
-            totalFromPayment;
+                const response =
+                    await fetch(
+                        API +
+                        "/vehicles/" +
+                        encodeURIComponent(vehicleId),
+                        {
+                            signal:
+                                controller.signal
+                        }
+                    );
+
+                if (response.ok) {
+
+                    vehicle =
+                        await response.json();
+                }
+
+            } finally {
+
+                clearTimeout(timeout);
+            }
 
         }
+        catch (error) {
 
+            console.warn(
+                "Vehicle API unavailable:",
+                error
+            );
+        }
+    }
 
+    /* =========================================
+       VEHICLE INFORMATION
+    ========================================= */
 
-        // =================================================
-        // SAFETY CHECK
-        // =================================================
+    const fallback =
+        vehicleFallback[vehicleId] ||
+        null;
 
-        total =
-        Math.max(
-            0,
-            total
-        );
+    let vehicleName =
+        vehicleNameParam || "";
 
+    let pricePerDay = 0;
 
+    let deposit = 0;
 
-        // =================================================
-        // SHOW TOTAL PAID
-        // =================================================
+    let vehicleLocation = "";
 
-        document.getElementById(
-            "totalPaid"
-        ).textContent =
+    /* BACKEND */
+
+    if (vehicle) {
+
+        const brand =
+            vehicle.brand || "";
+
+        const model =
+            vehicle.model || "";
+
+        const apiName =
+            (
+                brand +
+                " " +
+                model
+            ).trim();
+
+        if (apiName) {
+
+            vehicleName =
+                apiName;
+        }
+
+        pricePerDay =
+            Number(
+                vehicle.price_per_day
+            ) || 0;
+
+        deposit =
+            Number(
+                vehicle.security_deposit
+            ) || 0;
+
+        vehicleLocation =
+            vehicle.location || "";
+    }
+
+    /* FALLBACK */
+
+    if (!vehicleName && fallback) {
+
+        vehicleName =
+            fallback.name;
+    }
+
+    if (
+        pricePerDay <= 0 &&
+        fallback
+    ) {
+
+        pricePerDay =
+            fallback.price;
+    }
+
+    if (
+        deposit <= 0 &&
+        fallback
+    ) {
+
+        deposit =
+            fallback.deposit;
+    }
+
+    if (!vehicleName) {
+
+        vehicleName =
+            "Selected Vehicle";
+    }
+
+    vehicleNameEl.textContent =
+        vehicleName;
+
+    /* =========================================
+       PICKUP LOCATION
+    ========================================= */
+
+    let pickupLocation =
+        pickupLocationParam ||
+        vehicleLocation ||
+        "Mumbai";
+
+    pickupLocationEl.textContent =
+        pickupLocation;
+
+    /* =========================================
+       RENTAL DAYS
+    ========================================= */
+
+    let days = 1;
+
+    if (pickup && ret) {
+
+        const startDate =
+            new Date(
+                pickup +
+                "T00:00:00"
+            );
+
+        const endDate =
+            new Date(
+                ret +
+                "T00:00:00"
+            );
+
+        if (
+            !Number.isNaN(
+                startDate.getTime()
+            ) &&
+            !Number.isNaN(
+                endDate.getTime()
+            ) &&
+            endDate >= startDate
+        ) {
+
+            days =
+                Math.max(
+                    1,
+                    Math.ceil(
+                        (
+                            endDate.getTime() -
+                            startDate.getTime()
+                        ) / 86400000
+                    )
+                );
+        }
+    }
+
+    /* =========================================
+       RENT
+    ========================================= */
+
+    let rent =
+        Number(
+            params.get("rent")
+        ) || 0;
+
+    if (
+        rent <= 0 &&
+        pricePerDay > 0
+    ) {
+
+        rent =
+            Math.round(
+                pricePerDay *
+                days
+            );
+    }
+
+    /* =========================================
+       DEPOSIT
+    ========================================= */
+
+    if (deposit <= 0) {
+
+        deposit =
+            Number(
+                params.get("deposit")
+            ) || 0;
+    }
+
+    /* =========================================
+       GST
+    ========================================= */
+
+    let gst =
+        Number(
+            params.get("gst")
+        ) || 0;
+
+    if (
+        gst <= 0 &&
+        rent > 0
+    ) {
+
+        gst =
+            Math.round(
+                rent * 0.18
+            );
+    }
+
+    /* =========================================
+       FINAL TOTAL
+    ========================================= */
+
+    let finalTotal =
+        totalFromPayment;
+
+    /*
+       Payment page total is kept as the
+       customer-paid amount.
+    */
+
+    if (finalTotal <= 0) {
+
+        finalTotal =
+            rent +
+            deposit +
+            gst -
+            discountFromPayment;
+
+        finalTotal =
+            Math.max(
+                0,
+                finalTotal
+            );
+    }
+
+    /* =========================================
+       DISPLAY TOTAL
+    ========================================= */
+
+    totalPaidEl.textContent =
         "₹" +
-        total.toLocaleString(
+        Math.round(
+            finalTotal
+        ).toLocaleString(
             "en-IN"
         );
 
+    /* =========================================
+       PICKUP DETAILS URL
+    ========================================= */
 
+    const nextParams =
+        new URLSearchParams();
 
-        // =================================================
-        // PICKUP DETAILS
-        // =================================================
+    /* Vehicle */
 
-        document.getElementById(
-            "pickupBtn"
-        ).href =
+    nextParams.set(
+        "id",
+        vehicleId
+    );
 
-        `pickup.html` +
+    nextParams.set(
+        "vehicleId",
+        vehicleId
+    );
 
-        `?id=${encodeURIComponent(vehicle.id)}` +
+    nextParams.set(
+        "vehicle",
+        vehicleName
+    );
 
-        `&vehicle=${encodeURIComponent(vehicleName)}` +
+    nextParams.set(
+        "vehicleName",
+        vehicleName
+    );
 
-        `&bookingId=${encodeURIComponent(bookingId)}` +
+    /* Booking */
 
-        `&pickup=${encodeURIComponent(pickup)}` +
+    nextParams.set(
+        "bookingId",
+        bookingId
+    );
 
-        `&return=${encodeURIComponent(ret)}` +
+    /* Dates */
 
-        `&location=${encodeURIComponent(vehicle.location)}` +
+    nextParams.set(
+        "pickup",
+        pickup
+    );
 
-        `&rent=${encodeURIComponent(rent)}` +
+    nextParams.set(
+        "return",
+        ret
+    );
 
-        `&deposit=${encodeURIComponent(deposit)}` +
+    /* Locations */
 
-        `&gst=${encodeURIComponent(gst)}` +
+    nextParams.set(
+        "location",
+        pickupLocation
+    );
 
-        `&original=${encodeURIComponent(originalTotal)}` +
+    nextParams.set(
+        "pickupLocation",
+        pickupLocation
+    );
 
-        `&discount=${encodeURIComponent(discount)}` +
+    nextParams.set(
+        "returnLocation",
+        returnLocationParam
+    );
 
-        `&coupon=${encodeURIComponent(couponCode)}` +
+    /* Financial data */
 
-        `&total=${encodeURIComponent(total)}`;
+    nextParams.set(
+        "rent",
+        String(
+            Math.round(rent)
+        )
+    );
 
+    nextParams.set(
+        "deposit",
+        String(
+            Math.round(deposit)
+        )
+    );
 
-        // =================================================
-        // DEBUG
-        // =================================================
+    nextParams.set(
+        "gst",
+        String(
+            Math.round(gst)
+        )
+    );
 
-        console.log(
-            "Original Amount:",
-            originalTotal
-        );
+    nextParams.set(
+        "original",
+        String(
+            Math.round(
+                originalFromPayment ||
+                finalTotal
+            )
+        )
+    );
 
+    nextParams.set(
+        "discount",
+        String(
+            Math.round(
+                discountFromPayment
+            )
+        )
+    );
 
-        console.log(
-            "Coupon:",
-            couponCode
-        );
+    nextParams.set(
+        "coupon",
+        couponCode
+    );
 
+    nextParams.set(
+        "total",
+        String(
+            Math.round(finalTotal)
+        )
+    );
 
-        console.log(
-            "Discount:",
-            discount
-        );
+    /* =========================================
+       BUTTON
+    ========================================= */
 
+    pickupBtn.href =
+        "pickup.html?" +
+        nextParams.toString();
 
-        console.log(
-            "Final Paid:",
-            total
-        );
+    /* =========================================
+       DEBUG
+    ========================================= */
 
-    }
+    console.log(
+        "BOOKING SUCCESS DATA",
+        {
+            vehicleId,
+            vehicleName,
+            bookingId,
+            pickup,
+            returnDate: ret,
+            pickupLocation,
+            returnLocation:
+                returnLocationParam,
+            days,
+            pricePerDay,
+            rent,
+            deposit,
+            gst,
+            original:
+                originalFromPayment,
+            discount:
+                discountFromPayment,
+            total:
+                finalTotal
+        }
+    );
 
-    catch (error) {
-
-        console.error(
-            "Booking confirmation error:",
-            error
-        );
-
-
-        document.getElementById(
-            "totalPaid"
-        ).textContent =
-        "Unable to load";
-
-    }
-
-}
-
-
-loadSuccess();
-
-
+});
 </script>
 
 
