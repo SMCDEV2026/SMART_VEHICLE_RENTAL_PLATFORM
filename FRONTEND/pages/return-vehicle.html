@@ -2,136 +2,881 @@
 <html lang="en">
 
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Return Vehicle | DriveZone</title>
+    <title>Return Vehicle | DriveZone</title>
 
-<link rel="stylesheet" href="../assets/css/style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 </head>
 
 <body>
 
 <header>
 
-<div class="logo">
-<h2> DriveZone</h2>
-</div>
+    <div class="logo">
+        <h2> DriveZone</h2>
+    </div>
 
-<nav>
-<a href="../index.html">Home</a>
-<a href="vehicles.html">Vehicles</a>
-<a href="my-bookings.html">My Bookings</a>
-</nav>
+    <nav>
+        <a href="../index.html">Home</a>
+        <a href="vehicles.html">Vehicles</a>
+        <a href="my-bookings.html">My Bookings</a>
+    </nav>
 
 </header>
 
+
 <section class="return-section">
 
-<div class="return-card">
+    <div class="return-card">
 
-<img src="../assets/images/drivezone-logo.png" class="ride-icon">
+        <img src="../assets/images/drivezone-logo.png"
+             class="ride-icon">
 
-<h1>Return Vehicle</h1>
+        <h1>Return Vehicle</h1>
 
-<p>Please verify the vehicle details before completing the return.</p>
+        <p>
+            Please verify the vehicle details before completing the return.
+        </p>
 
-<div class="return-grid">
 
-<div>
-<h3>Vehicle</h3>
-<p id="vehicleName">Loading...</p>
-</div>
+        <div class="return-grid">
 
-<div>
-<h3>Booking ID</h3>
-<p id="bookingId">Loading...</p>
-</div>
+            <div>
+                <h3>Vehicle</h3>
+                <p id="vehicleName">Loading...</p>
+            </div>
 
-<div>
-<h3>Return Date</h3>
-<input type="date">
-</div>
 
-<div>
-<h3>Return Time</h3>
-<input type="time">
-</div>
+            <div>
+                <h3>Booking ID</h3>
+                <p id="bookingId">Loading...</p>
+            </div>
 
-<div>
-<h3>Fuel Level</h3>
-<select>
-<option>Full Tank</option>
-<option>75%</option>
-<option>50%</option>
-<option>25%</option>
-</select>
-</div>
 
-<div>
-<h3>Vehicle Condition</h3>
-<select>
-<option>Excellent</option>
-<option>Good</option>
-<option>Minor Damage</option>
-<option>Major Damage</option>
-</select>
-</div>
+            <div>
+                <h3>Return Date</h3>
+                <input type="date" id="returnDate">
+            </div>
 
-</div>
 
-<div class="damage-box">
+            <div>
+                <h3>Return Time</h3>
+                <input type="time" id="returnTime">
+            </div>
 
-<h3>Damage Notes</h3>
 
-<textarea placeholder="Write damage details (if any)..."></textarea>
+            <div>
+                <h3>Fuel Level</h3>
 
-</div>
+                <select id="fuelLevel">
 
-<div class="image-box">
+                    <option value="Full Tank">
+                        Full Tank
+                    </option>
 
-<h3>Vehicle Inspection Photo</h3>
+                    <option value="75%">
+                        75%
+                    </option>
 
-<div class="upload-placeholder">
-📷 Upload Vehicle Image
-</div>
+                    <option value="50%">
+                        50%
+                    </option>
 
-</div>
+                    <option value="25%">
+                        25%
+                    </option>
 
-<a id="billBtn" href="#" class="btn">
-Generate Final Bill
-</a>
+                </select>
 
-</div>
+            </div>
+
+
+            <div>
+
+                <h3>Vehicle Condition</h3>
+
+                <select id="vehicleCondition">
+
+                    <option value="Excellent">
+                        Excellent
+                    </option>
+
+                    <option value="Good">
+                        Good
+                    </option>
+
+                    <option value="Minor Damage">
+                        Minor Damage
+                    </option>
+
+                    <option value="Major Damage">
+                        Major Damage
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div class="damage-box">
+
+            <h3>Damage Notes</h3>
+
+            <textarea
+                id="damageNotes"
+                placeholder="Write damage details (if any)..."></textarea>
+
+        </div>
+
+
+        <div class="image-box">
+
+            <h3>Vehicle Inspection Photo</h3>
+
+            <div class="upload-placeholder">
+                📷 Upload Vehicle Image
+            </div>
+
+        </div>
+
+
+        <a id="billBtn"
+           href="#"
+           class="btn">
+
+            Generate Final Bill
+
+        </a>
+
+    </div>
 
 </section>
 
+
 <script>
 
-const params = new URLSearchParams(window.location.search);
+document.addEventListener("DOMContentLoaded", function () {
 
-const vehicle = params.get("vehicle");
-const bookingId = params.get("bookingId");
-const pickup = params.get("pickup");
+    /* =========================================
+       GET URL PARAMETERS
+    ========================================= */
 
-const rent = params.get("rent");
-const deposit = params.get("deposit");
-const gst = params.get("gst");
-const total = params.get("total");
+    const params =
+        new URLSearchParams(window.location.search);
 
-document.getElementById("vehicleName").textContent =
-vehicle || "Vehicle";
 
-document.getElementById("bookingId").textContent =
-bookingId || "-";
+    /* =========================================
+       BASIC BOOKING INFORMATION
+    ========================================= */
 
-document.getElementById("billBtn").href =
-`final-bill.html?vehicle=${encodeURIComponent(vehicle)}&bookingId=${encodeURIComponent(bookingId)}&pickup=${encodeURIComponent(pickup)}&rent=${encodeURIComponent(rent)}&deposit=${encodeURIComponent(deposit)}&gst=${encodeURIComponent(gst)}&total=${encodeURIComponent(total)}`;
+    const vehicle =
+        params.get("vehicle") ||
+        params.get("vehicleName") ||
+        "Vehicle";
+
+
+    const bookingId =
+        params.get("bookingId") ||
+        params.get("id") ||
+        "SVR000000";
+
+
+    const vehicleId =
+        params.get("id") ||
+        params.get("vehicleId") ||
+        "";
+
+
+    const pickup =
+        params.get("pickup") ||
+        "";
+
+
+    const originalReturn =
+        params.get("return") ||
+        "";
+
+
+    const pickupLocation =
+        params.get("pickupLocation") ||
+        params.get("location") ||
+        "Mumbai";
+
+
+    /* =========================================
+       BILL INFORMATION
+    ========================================= */
+
+    let rent =
+        Number(params.get("rent")) || 0;
+
+
+    let deposit =
+        Number(params.get("deposit")) || 0;
+
+
+    let gst =
+        Number(params.get("gst")) || 0;
+
+
+    const originalTotal =
+        Number(params.get("total")) || 0;
+
+
+    let fuel =
+        Number(params.get("fuel")) || 0;
+
+
+    let extra =
+        Number(params.get("extra")) || 0;
+
+
+    let damage =
+        Number(params.get("damage")) || 0;
+
+
+    const original =
+        Number(params.get("original")) || 0;
+
+
+    const discount =
+        Number(params.get("discount")) || 0;
+
+
+    const coupon =
+        params.get("coupon") || "";
+
+
+    /* =========================================
+       VEHICLE FALLBACK DATA
+    ========================================= */
+
+    const vehicles = {
+
+        "1": {
+            name: "Mahindra Scorpio N",
+            price: 4200,
+            deposit: 10000
+        },
+
+        "3": {
+            name: "Kia Seltos",
+            price: 2700,
+            deposit: 10000
+        },
+
+        "4": {
+            name: "Hyundai Verna",
+            price: 2300,
+            deposit: 10000
+        },
+
+        "5": {
+            name: "Honda City",
+            price: 2200,
+            deposit: 10000
+        },
+
+        "6": {
+            name: "Tata Harrier",
+            price: 3300,
+            deposit: 10000
+        },
+
+        "7": {
+            name: "Mahindra XUV700",
+            price: 4500,
+            deposit: 10000
+        },
+
+        "8": {
+            name: "MG Hector",
+            price: 3000,
+            deposit: 10000
+        },
+
+        "9": {
+            name: "Toyota Innova Hycross",
+            price: 5200,
+            deposit: 10000
+        },
+
+        "10": {
+            name: "BMW X1",
+            price: 8500,
+            deposit: 20000
+        },
+
+        "11": {
+            name: "Audi A4",
+            price: 9000,
+            deposit: 20000
+        },
+
+        "12": {
+            name: "Mercedes C-Class",
+            price: 10000,
+            deposit: 20000
+        },
+
+        "13": {
+            name: "Tata Nexon EV",
+            price: 2800,
+            deposit: 10000
+        },
+
+        "14": {
+            name: "Royal Enfield Hunter 350",
+            price: 850,
+            deposit: 5000
+        },
+
+        "15": {
+            name: "KTM Duke 390",
+            price: 1200,
+            deposit: 5000
+        },
+
+        "16": {
+            name: "TVS Apache RTR 310",
+            price: 950,
+            deposit: 5000
+        },
+
+        "17": {
+            name: "Honda CB350",
+            price: 900,
+            deposit: 5000
+        },
+
+        "18": {
+            name: "Hero XPulse 200",
+            price: 750,
+            deposit: 5000
+        },
+
+        "19": {
+            name: "Honda Activa 6G",
+            price: 400,
+            deposit: 5000
+        },
+
+        "20": {
+            name: "Ola S1 Pro",
+            price: 650,
+            deposit: 5000
+        },
+
+        "21": {
+            name: "MG ZS EV",
+            price: 3500,
+            deposit: 10000
+        },
+
+        "22": {
+            name: "Hyundai Ioniq 5",
+            price: 4800,
+            deposit: 10000
+        },
+
+        "23": {
+            name: "Land Rover Defender",
+            price: 15000,
+            deposit: 20000
+        },
+
+        "24": {
+            name: "Ford Mustang",
+            price: 18000,
+            deposit: 20000
+        },
+
+        "25": {
+            name: "Volkswagen Virtus",
+            price: 2600,
+            deposit: 10000
+        }
+
+    };
+
+
+    /* =========================================
+       FIND VEHICLE FALLBACK
+    ========================================= */
+
+    const vehicleData =
+        vehicles[vehicleId];
+
+
+    /* =========================================
+       CALCULATE RENT IF ZERO
+    ========================================= */
+
+    if (
+        rent <= 0 &&
+        vehicleData
+    ) {
+
+        let days = 1;
+
+
+        const pickupDate =
+            new Date(pickup);
+
+
+        const returnDate =
+            new Date(originalReturn);
+
+
+        if (
+            !isNaN(pickupDate.getTime()) &&
+            !isNaN(returnDate.getTime())
+        ) {
+
+            const difference =
+                returnDate.getTime() -
+                pickupDate.getTime();
+
+
+            days =
+                Math.ceil(
+                    difference /
+                    (1000 * 60 * 60 * 24)
+                );
+
+
+            if (days < 1) {
+                days = 1;
+            }
+
+        }
+
+
+        rent =
+            vehicleData.price * days;
+
+    }
+
+
+    /* =========================================
+       CALCULATE DEPOSIT IF ZERO
+    ========================================= */
+
+    if (
+        deposit <= 0 &&
+        vehicleData
+    ) {
+
+        deposit =
+            vehicleData.deposit;
+
+    }
+
+
+    /* =========================================
+       CALCULATE GST IF ZERO
+    ========================================= */
+
+    if (
+        gst <= 0 &&
+        rent > 0
+    ) {
+
+        gst =
+            Math.round(rent * 0.18);
+
+    }
+
+
+    /* =========================================
+       DISPLAY VEHICLE
+    ========================================= */
+
+    document.getElementById("vehicleName")
+        .textContent = vehicle;
+
+
+    /* =========================================
+       DISPLAY BOOKING ID
+    ========================================= */
+
+    document.getElementById("bookingId")
+        .textContent = bookingId;
+
+
+    /* =========================================
+       DEFAULT RETURN DATE
+    ========================================= */
+
+    const returnDateInput =
+        document.getElementById("returnDate");
+
+
+    if (returnDateInput) {
+
+        if (originalReturn) {
+
+            returnDateInput.value =
+                originalReturn;
+
+        } else {
+
+            const today =
+                new Date();
+
+
+            const year =
+                today.getFullYear();
+
+
+            const month =
+                String(
+                    today.getMonth() + 1
+                ).padStart(2, "0");
+
+
+            const day =
+                String(
+                    today.getDate()
+                ).padStart(2, "0");
+
+
+            returnDateInput.value =
+                year +
+                "-" +
+                month +
+                "-" +
+                day;
+
+        }
+
+    }
+
+
+    /* =========================================
+       DEFAULT RETURN TIME
+    ========================================= */
+
+    const returnTimeInput =
+        document.getElementById("returnTime");
+
+
+    if (returnTimeInput) {
+
+        returnTimeInput.value = "10:00";
+
+    }
+
+
+    /* =========================================
+       GENERATE FINAL BILL
+    ========================================= */
+
+    function generateBill() {
+
+        const returnDate =
+            document.getElementById("returnDate")
+                .value || "";
+
+
+        const returnTime =
+            document.getElementById("returnTime")
+                .value || "";
+
+
+        const fuelLevel =
+            document.getElementById("fuelLevel")
+                .value;
+
+
+        const condition =
+            document.getElementById("vehicleCondition")
+                .value;
+
+
+        const damageNotes =
+            document.getElementById("damageNotes")
+                .value || "";
+
+
+        /* =====================================
+           FUEL CHARGE
+        ===================================== */
+
+        if (fuelLevel === "Full Tank") {
+
+            fuel = 0;
+
+        } else {
+
+            fuel = 500;
+
+        }
+
+
+        /* =====================================
+           DAMAGE CHARGE
+        ===================================== */
+
+        if (
+            condition === "Excellent" ||
+            condition === "Good"
+        ) {
+
+            damage = 0;
+
+        }
+        else if (
+            condition === "Minor Damage"
+        ) {
+
+            damage = 1000;
+
+        }
+        else if (
+            condition === "Major Damage"
+        ) {
+
+            damage = 5000;
+
+        }
+
+
+        /* =====================================
+           EXTRA HOURS
+        ===================================== */
+
+        extra =
+            Number(params.get("extra")) || 0;
+
+
+        /* =====================================
+           FINAL SETTLEMENT
+        ===================================== */
+
+        let finalTotal =
+            rent +
+            fuel +
+            extra +
+            damage +
+            gst -
+            deposit;
+
+
+        /*
+           If deposit is greater than charges,
+           settlement should not be negative.
+        */
+
+        if (finalTotal < 0) {
+
+            finalTotal = 0;
+
+        }
+
+
+        /*
+           If detailed billing information
+           was unavailable but payment already
+           contained a valid total, preserve it.
+        */
+
+        if (
+            rent <= 0 &&
+            gst <= 0 &&
+            originalTotal > 0
+        ) {
+
+            finalTotal =
+                originalTotal +
+                fuel +
+                extra +
+                damage;
+
+        }
+
+
+        /* =====================================
+           CREATE FINAL BILL URL
+        ===================================== */
+
+        const billParams =
+            new URLSearchParams();
+
+
+        billParams.set(
+            "vehicle",
+            vehicle
+        );
+
+
+        billParams.set(
+            "vehicleName",
+            vehicle
+        );
+
+
+        billParams.set(
+            "bookingId",
+            bookingId
+        );
+
+
+        billParams.set(
+            "id",
+            vehicleId
+        );
+
+
+        billParams.set(
+            "pickup",
+            pickup
+        );
+
+
+        billParams.set(
+            "return",
+            returnDate
+        );
+
+
+        billParams.set(
+            "returnTime",
+            returnTime
+        );
+
+
+        billParams.set(
+            "pickupLocation",
+            pickupLocation
+        );
+
+
+        billParams.set(
+            "location",
+            pickupLocation
+        );
+
+
+        billParams.set(
+            "rent",
+            Math.round(rent)
+        );
+
+
+        billParams.set(
+            "fuel",
+            Math.round(fuel)
+        );
+
+
+        billParams.set(
+            "extra",
+            Math.round(extra)
+        );
+
+
+        billParams.set(
+            "damage",
+            Math.round(damage)
+        );
+
+
+        billParams.set(
+            "deposit",
+            Math.round(deposit)
+        );
+
+
+        billParams.set(
+            "gst",
+            Math.round(gst)
+        );
+
+
+        billParams.set(
+            "original",
+            Math.round(original)
+        );
+
+
+        billParams.set(
+            "discount",
+            Math.round(discount)
+        );
+
+
+        billParams.set(
+            "coupon",
+            coupon
+        );
+
+
+        billParams.set(
+            "fuelLevel",
+            fuelLevel
+        );
+
+
+        billParams.set(
+            "condition",
+            condition
+        );
+
+
+        billParams.set(
+            "damageNotes",
+            damageNotes
+        );
+
+
+        billParams.set(
+            "total",
+            Math.round(finalTotal)
+        );
+
+
+        /* =====================================
+           OPEN FINAL BILL
+        ===================================== */
+
+        window.location.href =
+            "final-bill.html?" +
+            billParams.toString();
+
+    }
+
+
+    /* =========================================
+       BUTTON
+    ========================================= */
+
+    document.getElementById("billBtn")
+        .addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+
+                generateBill();
+
+            }
+        );
+
+});
+
 </script>
+
 
 <script src="../assets/js/script.js"></script>
 
 </body>
+
 </html>
