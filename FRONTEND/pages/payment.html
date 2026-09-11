@@ -391,38 +391,47 @@
 
 
 <script>
-
 document.addEventListener("DOMContentLoaded", function () {
-
-    /* =====================================================
-       API
-    ===================================================== */
 
     const API =
         "https://smart-vehicle-rental-platform-1.onrender.com/api";
 
+    const params = new URLSearchParams(window.location.search);
 
-    /* =====================================================
-       URL PARAMETERS
-    ===================================================== */
-
-    const params =
-        new URLSearchParams(window.location.search);
+    /* ===============================
+       BOOKING DATA
+    =============================== */
 
     const vehicleId =
-        params.get("id");
+        params.get("id") ||
+        params.get("vehicleId") ||
+        "";
+
+    const vehicleName =
+        params.get("vehicleName") ||
+        params.get("vehicle") ||
+        "";
 
     const pickup =
-        params.get("pickup");
+        params.get("pickup") ||
+        "";
 
     const returnDate =
-        params.get("return");
+        params.get("return") ||
+        "";
 
+    const pickupLocation =
+        params.get("pickupLocation") ||
+        params.get("location") ||
+        "";
 
-    /*
-       Booking Summary can send total directly.
-       This is our fallback if Render/API is unavailable.
-    */
+    const returnLocation =
+        params.get("returnLocation") ||
+        "";
+
+    /* ===============================
+       PASSED AMOUNTS
+    =============================== */
 
     const passedTotal =
         Number(params.get("total")) || 0;
@@ -436,10 +445,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const passedCoupon =
         params.get("coupon") || "";
 
-
-    /* =====================================================
+    /* ===============================
        PAYMENT VARIABLES
-    ===================================================== */
+    =============================== */
 
     let originalTotal =
         passedOriginal > 0
@@ -462,25 +470,19 @@ document.addEventListener("DOMContentLoaded", function () {
     let appliedCouponCode =
         passedCoupon;
 
-
-    /* =====================================================
+    /* ===============================
        COUPONS
-    ===================================================== */
+    =============================== */
 
     const coupons = {
-
         NEW25: 4000,
-
         LOYALTY: 5000,
-
         DRIVEZONE30: 3000
-
     };
 
-
-    /* =====================================================
-       HTML ELEMENTS
-    ===================================================== */
+    /* ===============================
+       ELEMENTS
+    =============================== */
 
     const totalAmountEl =
         document.getElementById("totalAmount");
@@ -515,23 +517,20 @@ document.addEventListener("DOMContentLoaded", function () {
     const payNowBtn =
         document.getElementById("payNowBtn");
 
-
-    /* =====================================================
+    /* ===============================
        MONEY FORMAT
-    ===================================================== */
+    =============================== */
 
     function formatMoney(amount) {
 
         return "₹" +
-            Math.round(amount)
+            Math.round(Number(amount) || 0)
                 .toLocaleString("en-IN");
-
     }
 
-
-    /* =====================================================
-       UPDATE UI
-    ===================================================== */
+    /* ===============================
+       UPDATE PAYMENT UI
+    =============================== */
 
     function updatePaymentUI() {
 
@@ -541,53 +540,43 @@ document.addEventListener("DOMContentLoaded", function () {
                 originalTotal - couponDiscount
             );
 
-
         originalAmountEl.textContent =
             formatMoney(originalTotal);
-
 
         discountAmountEl.textContent =
             "- " +
             formatMoney(couponDiscount);
 
-
         finalAmountEl.textContent =
             formatMoney(finalPayable);
-
 
         totalAmountEl.textContent =
             formatMoney(finalPayable);
 
-
         if (couponDiscount > 0) {
 
-            discountRow.style.display =
-                "flex";
+            discountRow.style.display = "flex";
 
             discountBadge.textContent =
                 appliedCouponCode || "COUPON";
 
-        }
-        else {
+        } else {
 
-            discountRow.style.display =
-                "none";
+            discountRow.style.display = "none";
 
         }
-
     }
 
-
-    /* =====================================================
-       LOAD PAYMENT AMOUNT
-    ===================================================== */
+    /* ===============================
+       LOAD PAYMENT
+    =============================== */
 
     async function loadPayment() {
 
-        /*
-           If Booking Summary already supplied a total,
-           display it immediately.
-        */
+        /* --------------------------------
+           If total already came from
+           Booking Summary, use it.
+        -------------------------------- */
 
         if (passedTotal > 0) {
 
@@ -600,213 +589,159 @@ document.addEventListener("DOMContentLoaded", function () {
                 passedDiscount;
 
             finalPayable =
-                passedTotal;
-
-            updatePaymentUI();
-
-        }
-
-
-        /*
-           If booking information is missing,
-           don't break the page.
-        */
-
-        if (
-            !vehicleId ||
-            !pickup ||
-            !returnDate
-        ) {
-
-            if (passedTotal <= 0) {
-
-                totalAmountEl.textContent =
-                    "Invalid Booking";
-
-            }
-
-            return;
-
-        }
-
-
-        /* =================================================
-           FETCH VEHICLE
-        ================================================= */
-
-        try {
-
-            const controller =
-                new AbortController();
-
-            const timeout =
-                setTimeout(
-                    function () {
-                        controller.abort();
-                    },
-                    8000
+                Math.max(
+                    0,
+                    originalTotal - couponDiscount
                 );
 
+            updatePaymentUI();
+        }
 
-            let response;
+        /* --------------------------------
+           If no total was passed,
+           calculate from vehicle API.
+        -------------------------------- */
+
+        if (
+            passedTotal <= 0 &&
+            vehicleId &&
+            pickup &&
+            returnDate
+        ) {
 
             try {
 
-                response =
-                    await fetch(
-                        API +
-                        "/vehicles/" +
-                        encodeURIComponent(vehicleId),
-                        {
-                            signal:
-                                controller.signal
-                        }
+                const controller =
+                    new AbortController();
+
+                const timeout =
+                    setTimeout(
+                        function () {
+                            controller.abort();
+                        },
+                        8000
                     );
 
-            }
-            finally {
+                let response;
 
-                clearTimeout(timeout);
+                try {
 
-            }
+                    response =
+                        await fetch(
+                            API +
+                            "/vehicles/" +
+                            encodeURIComponent(vehicleId),
+                            {
+                                signal:
+                                    controller.signal
+                            }
+                        );
 
+                } finally {
 
-            if (!response.ok) {
+                    clearTimeout(timeout);
 
-                throw new Error(
-                    "Vehicle API returned " +
-                    response.status
-                );
+                }
 
-            }
+                if (!response.ok) {
 
+                    throw new Error(
+                        "Vehicle API error: " +
+                        response.status
+                    );
+                }
 
-            const vehicle =
-                await response.json();
+                const vehicle =
+                    await response.json();
 
+                const pricePerDay =
+                    Number(
+                        vehicle.price_per_day
+                    );
 
-            /* =================================================
-               VEHICLE PRICE
-            ================================================= */
+                const securityDeposit =
+                    Number(
+                        vehicle.security_deposit
+                    ) || 0;
 
-            const pricePerDay =
-                Number(
-                    vehicle.price_per_day
-                );
+                if (
+                    !Number.isFinite(pricePerDay) ||
+                    pricePerDay <= 0
+                ) {
 
-            const securityDeposit =
-                Number(
-                    vehicle.security_deposit
-                ) || 0;
+                    throw new Error(
+                        "Invalid vehicle price"
+                    );
+                }
 
+                /* --------------------------------
+                   DATE CALCULATION
+                -------------------------------- */
 
-            if (
-                !Number.isFinite(pricePerDay) ||
-                pricePerDay <= 0
-            ) {
+                const startDate =
+                    new Date(
+                        pickup + "T00:00:00"
+                    );
 
-                throw new Error(
-                    "Invalid vehicle price"
-                );
+                const endDate =
+                    new Date(
+                        returnDate + "T00:00:00"
+                    );
 
-            }
+                if (
+                    Number.isNaN(startDate.getTime()) ||
+                    Number.isNaN(endDate.getTime()) ||
+                    endDate < startDate
+                ) {
 
+                    throw new Error(
+                        "Invalid booking dates"
+                    );
+                }
 
-            /* =================================================
-               DATE CALCULATION
-            ================================================= */
+                const oneDay =
+                    24 * 60 * 60 * 1000;
 
-            const startDate =
-                new Date(
-                    pickup + "T00:00:00"
-                );
+                const days =
+                    Math.max(
+                        1,
+                        Math.ceil(
+                            (
+                                endDate.getTime() -
+                                startDate.getTime()
+                            ) / oneDay
+                        )
+                    );
 
-            const endDate =
-                new Date(
-                    returnDate + "T00:00:00"
-                );
+                /* --------------------------------
+                   RENT
+                -------------------------------- */
 
+                const rentalCharge =
+                    days * pricePerDay;
 
-            if (
-                Number.isNaN(
-                    startDate.getTime()
-                ) ||
-                Number.isNaN(
-                    endDate.getTime()
-                ) ||
-                endDate < startDate
-            ) {
+                /* --------------------------------
+                   GST
+                -------------------------------- */
 
-                throw new Error(
-                    "Invalid booking dates"
-                );
+                const gst =
+                    Math.round(
+                        rentalCharge * 0.18
+                    );
 
-            }
-
-
-            const oneDay =
-                24 * 60 * 60 * 1000;
-
-
-            const days =
-                Math.max(
-                    1,
-                    Math.ceil(
-                        (
-                            endDate.getTime() -
-                            startDate.getTime()
-                        ) / oneDay
-                    )
-                );
-
-
-            /* =================================================
-               RENT
-            ================================================= */
-
-            const rentalCharge =
-                days * pricePerDay;
-
-
-            /* =================================================
-               GST 18%
-            ================================================= */
-
-            const gst =
-                Math.round(
-                    rentalCharge * 0.18
-                );
-
-
-            /* =================================================
-               ORIGINAL TOTAL
-               Rent + Deposit + GST
-            ================================================= */
-
-            const calculatedTotal =
-                Math.round(
-                    rentalCharge +
-                    securityDeposit +
-                    gst
-                );
-
-
-            /*
-               If Booking Summary supplied a total,
-               keep that amount so both pages stay consistent.
-
-               Otherwise use the backend calculation.
-            */
-
-            if (passedTotal <= 0) {
+                /* --------------------------------
+                   ORIGINAL TOTAL
+                -------------------------------- */
 
                 originalTotal =
-                    calculatedTotal;
+                    Math.round(
+                        rentalCharge +
+                        securityDeposit +
+                        gst
+                    );
 
                 couponDiscount = 0;
-
                 couponApplied = false;
-
                 appliedCouponCode = "";
 
                 finalPayable =
@@ -814,76 +749,54 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 updatePaymentUI();
 
-            }
-
-            console.log(
-                "Payment data loaded:",
-                {
-                    vehicleId,
-                    pricePerDay,
-                    securityDeposit,
-                    days,
-                    rentalCharge,
-                    gst,
-                    calculatedTotal,
-                    originalTotal,
-                    couponDiscount,
-                    finalPayable
-                }
-            );
-
-        }
-        catch (error) {
-
-            console.error(
-                "Payment loading error:",
-                error
-            );
-
-
-            /*
-               If total came from Booking Summary,
-               continue using that total.
-            */
-
-            if (passedTotal > 0) {
-
-                originalTotal =
-                    passedOriginal > 0
-                        ? passedOriginal
-                        : passedTotal;
-
-                couponDiscount =
-                    passedDiscount;
-
-                finalPayable =
-                    Math.max(
-                        0,
-                        originalTotal -
-                        couponDiscount
-                    );
-
-                updatePaymentUI();
-
-                totalAmountEl.title =
-                    "Amount loaded from Booking Summary.";
+                console.log(
+                    "Payment calculated:",
+                    {
+                        vehicleId,
+                        vehicleName,
+                        pickup,
+                        returnDate,
+                        pickupLocation,
+                        returnLocation,
+                        days,
+                        rentalCharge,
+                        securityDeposit,
+                        gst,
+                        originalTotal,
+                        finalPayable
+                    }
+                );
 
             }
-            else {
+            catch (error) {
+
+                console.error(
+                    "Payment loading error:",
+                    error
+                );
 
                 totalAmountEl.textContent =
                     "Unable to load amount";
-
             }
-
         }
 
+        /* --------------------------------
+           No booking total and no data
+        -------------------------------- */
+
+        if (
+            passedTotal <= 0 &&
+            (!vehicleId || !pickup || !returnDate)
+        ) {
+
+            totalAmountEl.textContent =
+                "Invalid Booking";
+        }
     }
 
-
-    /* =====================================================
+    /* ===============================
        APPLY COUPON
-    ===================================================== */
+    =============================== */
 
     function applyCoupon() {
 
@@ -891,9 +804,6 @@ document.addEventListener("DOMContentLoaded", function () {
             couponCodeEl.value
                 .trim()
                 .toUpperCase();
-
-
-        /* EMPTY */
 
         if (!code) {
 
@@ -904,11 +814,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 "Please enter a coupon code.";
 
             return;
-
         }
-
-
-        /* AMOUNT NOT READY */
 
         if (originalTotal <= 0) {
 
@@ -919,11 +825,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 "Please wait for the amount to load.";
 
             return;
-
         }
-
-
-        /* INVALID COUPON */
 
         if (
             !Object.prototype.hasOwnProperty.call(
@@ -933,9 +835,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ) {
 
             couponDiscount = 0;
-
             couponApplied = false;
-
             appliedCouponCode = "";
 
             finalPayable =
@@ -950,11 +850,7 @@ document.addEventListener("DOMContentLoaded", function () {
             updatePaymentUI();
 
             return;
-
         }
-
-
-        /* APPLY DISCOUNT */
 
         couponDiscount =
             Math.min(
@@ -962,21 +858,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 originalTotal
             );
 
+        couponApplied = true;
 
-        couponApplied =
-            true;
-
-        appliedCouponCode =
-            code;
-
+        appliedCouponCode = code;
 
         finalPayable =
             Math.max(
                 0,
-                originalTotal -
-                couponDiscount
+                originalTotal - couponDiscount
             );
-
 
         couponMessageEl.className =
             "coupon-success";
@@ -988,35 +878,28 @@ document.addEventListener("DOMContentLoaded", function () {
             couponDiscount.toLocaleString("en-IN") +
             " discount added.";
 
+        couponCodeEl.disabled = true;
 
-        couponCodeEl.disabled =
-            true;
-
-        applyCouponBtn.disabled =
-            true;
+        applyCouponBtn.disabled = true;
 
         applyCouponBtn.textContent =
             "Applied";
 
-
         updatePaymentUI();
-
     }
 
-
-    /* =====================================================
+    /* ===============================
        COUPON BUTTON
-    ===================================================== */
+    =============================== */
 
     applyCouponBtn.addEventListener(
         "click",
         applyCoupon
     );
 
-
-    /* =====================================================
-       PAYMENT FORM
-    ===================================================== */
+    /* ===============================
+       PAYMENT SUBMIT
+    =============================== */
 
     paymentForm.addEventListener(
         "submit",
@@ -1024,90 +907,100 @@ document.addEventListener("DOMContentLoaded", function () {
 
             event.preventDefault();
 
-
-            /* PAYMENT AMOUNT CHECK */
-
-            if (
-                finalPayable <= 0
-            ) {
+            if (finalPayable <= 0) {
 
                 alert(
                     "Payment amount is not available. Please go back and try again."
                 );
 
                 return;
-
             }
-
-
-            /* PAYMENT METHOD */
 
             const selectedPayment =
                 document.querySelector(
                     'input[name="payment"]:checked'
                 );
 
-
             const paymentMethod =
                 selectedPayment
                     ? selectedPayment.value
                     : "card";
 
-
-            /* DISABLE BUTTON */
-
-            payNowBtn.disabled =
-                true;
+            payNowBtn.disabled = true;
 
             payNowBtn.textContent =
                 "Processing Payment...";
 
-
-            /* =================================================
-               SEND DATA TO PROCESSING PAGE
-            ================================================= */
+            /* ===============================
+               PRESERVE ALL BOOKING DATA
+            =============================== */
 
             const nextParams =
                 new URLSearchParams();
 
+            /* Vehicle ID */
 
             nextParams.set(
                 "id",
-                vehicleId || ""
+                vehicleId
             );
 
+            nextParams.set(
+                "vehicleId",
+                vehicleId
+            );
+
+            /* Vehicle Name */
+
+            nextParams.set(
+                "vehicleName",
+                vehicleName
+            );
+
+            nextParams.set(
+                "vehicle",
+                vehicleName
+            );
+
+            /* Dates */
 
             nextParams.set(
                 "pickup",
-                pickup || ""
+                pickup
             );
-
 
             nextParams.set(
                 "return",
-                returnDate || ""
+                returnDate
             );
 
+            /* Locations */
+
+            nextParams.set(
+                "pickupLocation",
+                pickupLocation
+            );
+
+            nextParams.set(
+                "returnLocation",
+                returnLocation
+            );
+
+            /* Money */
 
             nextParams.set(
                 "original",
                 String(
-                    Math.round(
-                        originalTotal
-                    )
+                    Math.round(originalTotal)
                 )
             );
-
 
             nextParams.set(
                 "discount",
                 String(
-                    Math.round(
-                        couponDiscount
-                    )
+                    Math.round(couponDiscount)
                 )
             );
-
 
             nextParams.set(
                 "coupon",
@@ -1116,26 +1009,30 @@ document.addEventListener("DOMContentLoaded", function () {
                     : ""
             );
 
-
             nextParams.set(
                 "total",
                 String(
-                    Math.round(
-                        finalPayable
-                    )
+                    Math.round(finalPayable)
                 )
             );
 
+            /* Payment method */
 
             nextParams.set(
                 "payment",
                 paymentMethod
             );
 
+            console.log(
+                "Sending booking data:",
+                Object.fromEntries(
+                    nextParams.entries()
+                )
+            );
 
-            /* =================================================
-               GO TO PROCESSING PAGE
-            ================================================= */
+            /* ===============================
+               GO TO PROCESSING
+            =============================== */
 
             setTimeout(
                 function () {
@@ -1147,30 +1044,20 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 700
             );
-
         }
     );
 
-
-    /* =====================================================
-       INITIAL DISPLAY
-    ===================================================== */
+    /* ===============================
+       INITIAL LOAD
+    =============================== */
 
     if (passedTotal > 0) {
-
         updatePaymentUI();
-
     }
-
-
-    /* =====================================================
-       START PAYMENT
-    ===================================================== */
 
     loadPayment();
 
 });
-
 </script>
 
 
